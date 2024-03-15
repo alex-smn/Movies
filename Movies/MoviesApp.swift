@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
+import XCTestDynamicOverlay
 
 @main
 struct MoviesApp: App {
+    static let store = Store(initialState: AppFeature.State()) {
+        AppFeature()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if !_XCTIsTesting {
+                AppView(store: MoviesApp.store)
+            }
         }
     }
 }
