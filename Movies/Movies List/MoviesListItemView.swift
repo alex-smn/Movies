@@ -9,8 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct MoviesListItemView: View {
-    let movie: Movie
-    private let imageWidth = 200
+    let movie: MoviesListItem
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -18,7 +17,7 @@ struct MoviesListItemView: View {
             colorScheme == .dark ? Color.gray : Color.white
             
             VStack(alignment: .leading, spacing: 0) {
-                if let posterUrl = URL(string: "\(Constants.posterUrlFormat)\(imageWidth)\(movie.posterPath)") {
+                if let posterUrl = URL(string: "\(Constants.posterUrlFormat)\(movie.posterPath)") {
                     KFImage(posterUrl)
                         .resizable()
                         .scaledToFit()
@@ -49,33 +48,7 @@ struct MoviesListItemView: View {
     }
 }
 
-private struct RatingView: View {
-    let rating: Float
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(.black)
-                .frame(width: 40, height: 40)
-            
-            Circle()
-                .trim(from: 0, to: CGFloat(rating * 0.1))
-                .stroke(
-                    rating < 5 ? .red : rating < 7 ? .yellow : .green,
-                    lineWidth: 3
-                )
-               .frame(width: 35, height: 35)
-               .rotationEffect(.degrees(-90))
-            
-            Text("\(Int(rating * 10))")
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-        }
-        .padding(.leading, 10)
-    }
-}
-
 #Preview {
-    return MoviesListItemView(movie: Movie.mock(id: 2))
+    return MoviesListItemView(movie: MoviesListItem.mock(id: 2))
 }
 

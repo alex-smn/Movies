@@ -21,8 +21,7 @@ struct AppView: View {
             MoviesListView(store: store.scope(state: \.seriesTab, action: \.seriesTab))
                 .tabItem {
                     Text("Series")
-                }
-            
+                }   
         }
     }
 }

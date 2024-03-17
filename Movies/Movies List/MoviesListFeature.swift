@@ -12,17 +12,19 @@ import Foundation
 struct MoviesListFeature {
     @ObservableState
     struct State: Equatable {
+        var path = StackState<MovieDetailsFeature.State>()
         var page: Int = 1
         var totalPages: Int = 1
         var sorting: Sorting = .topRated
-        var movies: [Movie] = []
+        var movies: [MoviesListItem] = []
         var isLoading = false
         var hasFetchingError = false
     }
     
     enum Action {
+        case path(StackAction<MovieDetailsFeature.State, MovieDetailsFeature.Action>)
         case fetchMovies
-        case moviesFetched(Result<MoviesListResponse, Error>)
+        case moviesFetched(Result<MoviesList, Error>)
         case moviesPageOpened
         case listEndReached
         case sortingSet(Sorting)
@@ -92,6 +94,8 @@ struct MoviesListFeature {
                 
             case .moviesPageOpened:
                 state.page = 1
+                state.isLoading = false
+                state.hasFetchingError = false
                 
                 return .run { send in
                     await send(.fetchMovies)
@@ -112,7 +116,13 @@ struct MoviesListFeature {
                 return .run { send in
                     await send(.fetchMovies)
                 }
+                
+            case .path:
+                return .none
             }
+        }
+        .forEach(\.path, action: \.path) {
+            MovieDetailsFeature()
         }
     }
 }

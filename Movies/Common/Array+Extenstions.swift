@@ -7,8 +7,8 @@
 
 import Foundation
 
-extension Array where Element == Movie {
-    func uniqued() -> [Movie] {
+extension Array where Element == MoviesListItem {
+    func uniqued() -> [MoviesListItem] {
         var seen = Set<Int>()
         return filter { seen.insert($0.id).inserted }
     }

@@ -27,7 +27,7 @@ final class MoviesListFeatureTests: XCTestCase {
         
         await store.receive(\.moviesFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movies = [Movie.mock(id: 3)]
+            $0.movies = [MoviesListItem.mock(id: 3)]
             $0.totalPages = 2
         }
     }
@@ -59,8 +59,31 @@ final class MoviesListFeatureTests: XCTestCase {
         
         await store.receive(\.moviesFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movies = [Movie.mock(id: 1), Movie.mock(id: 2)]
+            $0.movies = [MoviesListItem.mock(id: 1), MoviesListItem.mock(id: 2)]
             $0.totalPages = 1
+        }
+    }
+    
+    @MainActor
+    func testFetchFailure() async {
+        let store = TestStore(initialState: MoviesListFeature.State()) {
+            MoviesListFeature()
+        } withDependencies: {
+            $0.moviesListClient.fetch = { @Sendable _, _ in
+                struct SomethingWrong: Error {}
+                throw SomethingWrong()
+            }
+        }
+        
+        await store.send(.moviesPageOpened)
+        
+        await store.receive(\.fetchMovies) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.moviesFetched.failure, timeout: .seconds(1)) {
+            $0.isLoading = false
+            $0.hasFetchingError = true
         }
     }
 }
