@@ -14,6 +14,8 @@ struct YouTubeView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView  {
         let webView = WKWebView()
         let request = URLRequest(url: URL(string: "https://youtube.com/embed/\(videoId)")!)
+        webView.allowsLinkPreview = true
+        webView.allowsBackForwardNavigationGestures = true
         webView.load(request)
         return webView
     }

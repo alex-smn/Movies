@@ -1,46 +1,46 @@
 //
-//  MoviesListFeature.swift
+//  SeriesListFeature.swift
 //  Movies
 //
-//  Created by Alexander Livshits on 14/03/2024.
+//  Created by Alexander Livshits on 17/03/2024.
 //
 
 import ComposableArchitecture
 import Foundation
 
 @Reducer
-struct MoviesListFeature {
+struct SeriesListFeature {
     @ObservableState
     struct State: Equatable {
-        var path = StackState<MovieDetailsFeature.State>()
+        var path = StackState<SeriesDetailsFeature.State>()
         var page: Int = 1
         var totalPages: Int = 1
         var sorting: Sorting = .topRated
-        var movies: [MoviesListItem] = []
+        var series: [SeriesListItem] = []
         var isLoading = false
         var hasFetchingError = false
     }
     
     enum Action {
-        case path(StackAction<MovieDetailsFeature.State, MovieDetailsFeature.Action>)
-        case fetchMovies
-        case moviesFetched(Result<MoviesList, Error>)
-        case moviesPageOpened
+        case path(StackAction<SeriesDetailsFeature.State, SeriesDetailsFeature.Action>)
+        case fetchSeries
+        case seriesFetched(Result<SeriesList, Error>)
+        case seriesPageOpened
         case listEndReached
         case sortingSet(Sorting)
     }
     
     enum Sorting {
         case topRated
-        case nowPlaying
+        case onTheAir
         case popular
         
         var name: String {
             switch self {
             case .topRated:
                 return "Top rated"
-            case .nowPlaying:
-                return "Now playing"
+            case .onTheAir:
+                return "On the air"
             case .popular:
                 return "Popular"
             }
@@ -49,72 +49,72 @@ struct MoviesListFeature {
         var urlString: String {
             switch self {
             case .topRated:
-                return "\(Constants.apiMoviesUrlFormat)/top_rated"
-            case .nowPlaying:
-                return "\(Constants.apiMoviesUrlFormat)/now_playing"
+                return "\(Constants.apiTVUrlFormat)/top_rated"
+            case .onTheAir:
+                return "\(Constants.apiTVUrlFormat)/on_the_air"
             case .popular:
-                return "\(Constants.apiMoviesUrlFormat)/popular"
+                return "\(Constants.apiTVUrlFormat)/popular"
             }
         }
     }
     
-    @Dependency(\.moviesListClient) var moviesListClient
+    @Dependency(\.seriesListClient) var seriesListClient
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .fetchMovies:
+            case .fetchSeries:
                 state.hasFetchingError = false
                 guard state.page <= state.totalPages else { return .none }
                 state.isLoading = true
                 
                 return .run { [page = state.page, sorting = state.sorting] send in
                     await send(
-                        .moviesFetched(
+                        .seriesFetched(
                             Result {
-                                try await self.moviesListClient.fetch(page, sorting)
+                                try await self.seriesListClient.fetch(page, sorting)
                             }
                         )
                     )
                 }
                 
-            case let .moviesFetched(.success(response)):
+            case let .seriesFetched(.success(response)):
                 state.isLoading = false
                 state.hasFetchingError = false
-                state.movies = (state.movies + response.results).uniqued()
+                state.series = (state.series + response.results).uniqued()
                 state.totalPages = response.totalPages
                 
                 return .none
                 
-            case .moviesFetched(.failure):
+            case .seriesFetched(.failure):
                 state.isLoading = false
                 state.hasFetchingError = true
                 
                 return .none
                 
-            case .moviesPageOpened:
+            case .seriesPageOpened:
                 state.page = 1
                 state.isLoading = false
                 state.hasFetchingError = false
                 
                 return .run { send in
-                    await send(.fetchMovies)
+                    await send(.fetchSeries)
                 }
                 
             case .listEndReached:
                 state.page += 1
                 
                 return .run { send in
-                    await send(.fetchMovies)
+                    await send(.fetchSeries)
                 }
                 
             case let .sortingSet(sorting):
                 state.page = 1
-                state.movies = []
+                state.series = []
                 state.sorting = sorting
                 
                 return .run { send in
-                    await send(.fetchMovies)
+                    await send(.fetchSeries)
                 }
                 
             case .path:
@@ -122,7 +122,7 @@ struct MoviesListFeature {
             }
         }
         .forEach(\.path, action: \.path) {
-            MovieDetailsFeature()
+            SeriesDetailsFeature()
         }
     }
 }

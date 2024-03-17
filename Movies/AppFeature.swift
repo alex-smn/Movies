@@ -11,12 +11,12 @@ import ComposableArchitecture
 struct AppFeature {
     struct State {
         var moviesTab = MoviesListFeature.State()
-        var seriesTab = MoviesListFeature.State()
+        var seriesTab = SeriesListFeature.State()
     }
     
     enum Action {
         case moviesTab(MoviesListFeature.Action)
-        case seriesTab(MoviesListFeature.Action)
+        case seriesTab(SeriesListFeature.Action)
     }
     
     var body: some ReducerOf<Self> {
@@ -25,7 +25,7 @@ struct AppFeature {
         }
         
         Scope(state: \.seriesTab, action: \.seriesTab) {
-            MoviesListFeature()
+            SeriesListFeature()
         }
         
         Reduce { state, action in

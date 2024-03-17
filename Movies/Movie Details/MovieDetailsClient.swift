@@ -118,7 +118,7 @@ struct Cast: Codable, Equatable {
     let originalName: String
     let popularity: Float
     let profilePath: String?
-    let castId: Int
+    let castId: Int?
     let character: String
     let creditId: String
     let order: Int
@@ -154,10 +154,10 @@ extension MovieDetails {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        return Self(
+        return MovieDetails(
             backdropPath: "/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg",
             budget: 25000000,
-            genres: [Genre(id: 18, name: "Drama"), Genre(id: 80, name: "Crime")],
+            genres: [Genre.mock(), Genre.mock()],
             id: id,
             imdbId: "tt0111161",
             originalLanguage: "en",
@@ -175,15 +175,21 @@ extension MovieDetails {
     }
 }
 
+extension Genre {
+    static func mock() -> Genre {
+        return Genre(id: 18, name: "Drama")
+    }
+}
+
 extension MovieVideos {
     static func mock() -> MovieVideos {
-        Self(id: 278, results: [Video.mock()])
+        MovieVideos(id: 278, results: [Video.mock()])
     }
 }
 
 extension Video {
     static func mock() -> Video {
-        Self(
+        Video(
             iso6391: "en",
             iso31661: "US", 
             name: "Trailer",
@@ -199,7 +205,7 @@ extension Video {
 
 extension MovieCast {
     static func mock() -> MovieCast {
-        Self(
+        MovieCast(
             id: 278,
             cast: [Cast.mock(), Cast.mock()]
         )
@@ -208,7 +214,7 @@ extension MovieCast {
 
 extension Cast {
     static func mock() -> Cast {
-        Self(
+        Cast(
             adult: false,
             gender: 2,
             id: 504,
@@ -227,7 +233,7 @@ extension Cast {
 
 extension MovieReviews {
     static func mock() -> MovieReviews {
-        Self(
+        MovieReviews(
             id: 278,
             page: 1,
             results: [Review.mock(), Review.mock()],
@@ -239,7 +245,7 @@ extension MovieReviews {
 
 extension Review {
     static func mock() -> Review {
-        Self(
+        Review(
             author: "username",
             authorDetails: Author.mock(),
             content: "Very good movie 9.5/10",
@@ -251,7 +257,7 @@ extension Review {
 
 extension Author {
     static func mock() -> Author {
-        Self(
+        Author(
             name: "",
             username: "username", 
             avatarPath: "/utEXl2EDiXBK6f41wCLsvprvMg4.jpg",

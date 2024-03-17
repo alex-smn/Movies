@@ -1,15 +1,15 @@
 //
-//  MoviesListView.swift
+//  SeriesListView.swift
 //  Movies
 //
-//  Created by Alexander Livshits on 14/03/2024.
+//  Created by Alexander Livshits on 17/03/2024.
 //
 
 import ComposableArchitecture
 import SwiftUI
 
-struct MoviesListView: View {
-    @Bindable var store: StoreOf<MoviesListFeature>
+struct SeriesListView: View {
+    @Bindable var store: StoreOf<SeriesListFeature>
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -22,13 +22,13 @@ struct MoviesListView: View {
             ZStack(alignment: .top) {
                 ScrollView(showsIndicators: false) {
                     VStack {
-                        if !store.movies.isEmpty {
+                        if !store.series.isEmpty {
                             LazyVGrid(columns: columns) {
-                                ForEach(Array(store.movies.enumerated()), id: \.1.id) { index, movie in
-                                    NavigationLink(state: MovieDetailsFeature.State(movieId: movie.id)) {
-                                        MoviesListItemView(movie: movie)
+                                ForEach(Array(store.series.enumerated()), id: \.1.id) { index, series in
+                                    NavigationLink(state: SeriesDetailsFeature.State(seriesId: series.id)) {
+                                        SeriesListItemView(series: series)
                                             .onAppear {
-                                                if store.movies.count - 2 == index {
+                                                if store.series.count - 2 == index {
                                                     store.send(.listEndReached)
                                                 }
                                             }
@@ -39,7 +39,7 @@ struct MoviesListView: View {
                         }
                         
                         if store.hasFetchingError {
-                            Text("Error: can't fetch movies")
+                            Text("Error: can't fetch series")
                         }
                         
                         if store.isLoading {
@@ -50,15 +50,15 @@ struct MoviesListView: View {
                 .padding(.top, 60)
                 
                 Menu {
-                    Button(MoviesListFeature.Sorting.topRated.name) {
+                    Button(SeriesListFeature.Sorting.topRated.name) {
                         store.send(.sortingSet(.topRated))
                     }
                     
-                    Button(MoviesListFeature.Sorting.nowPlaying.name) {
-                        store.send(.sortingSet(.nowPlaying))
+                    Button(SeriesListFeature.Sorting.onTheAir.name) {
+                        store.send(.sortingSet(.onTheAir))
                     }
                     
-                    Button(MoviesListFeature.Sorting.popular.name) {
+                    Button(SeriesListFeature.Sorting.popular.name) {
                         store.send(.sortingSet(.popular))
                     }
                 } label: {
@@ -74,16 +74,16 @@ struct MoviesListView: View {
             .clipped()
             .padding(.horizontal, 15)
             .onAppear {
-                store.send(.moviesPageOpened)
+                store.send(.seriesPageOpened)
             }
         } destination: { store in
-            MovieDetailsView(store: store)
+            SeriesDetailsView(store: store)
         }
     }
 }
 
 #Preview {
-    MoviesListView(store: Store(initialState: MoviesListFeature.State()) {
-        MoviesListFeature()
+    SeriesListView(store: Store(initialState: SeriesListFeature.State()) {
+        SeriesListFeature()
     })
 }

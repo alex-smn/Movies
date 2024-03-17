@@ -28,7 +28,7 @@ extension MoviesListClient: TestDependencyKey {
 extension MoviesListClient: DependencyKey {
     static let liveValue = Self(
         fetch: { page, sorting in
-            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(sorting.urlString)&page=\(page)")!, responseType: MoviesList.self)
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(sorting.urlString)?page=\(page)")!, responseType: MoviesList.self)
         }
     )
 }

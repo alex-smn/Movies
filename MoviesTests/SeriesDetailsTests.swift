@@ -1,8 +1,8 @@
 //
-//  MovieDetailsTests.swift
+//  SeriesDetailsTests.swift
 //  MoviesTests
 //
-//  Created by Alexander Livshits on 16/03/2024.
+//  Created by Alexander Livshits on 17/03/2024.
 //
 
 import ComposableArchitecture
@@ -10,19 +10,19 @@ import XCTest
 
 @testable import Movies
 
-final class MovieDetailsTests: XCTestCase {
+final class SeriesDetailsTests: XCTestCase {
     @MainActor
-    func testMovieDetailsOpened() async {
-        let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
-            MovieDetailsFeature()
+    func testSeriesDetailsOpened() async {
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
         } withDependencies: {
-            $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
-            $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
         }
         
-        await store.send(.movieDetailsPageOpened)
+        await store.send(.seriesDetailsPageOpened)
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -30,7 +30,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movie = MovieDetails.mock(id: 2)
+            $0.series = SeriesDetails.mock(id: 2)
         }
         
         await store.receive(\.fetchVideos) {
@@ -64,19 +64,19 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testDetailsFetchFailure() async {
-        let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
-            MovieDetailsFeature()
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
         } withDependencies: {
-            $0.movieDetailsClient.fetchDetails = { @Sendable _ in
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in
                 struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
-            $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
         }
         
-        await store.send(.movieDetailsPageOpened)
+        await store.send(.seriesDetailsPageOpened)
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -118,19 +118,19 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testVideosFetchFailure() async {
-        let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
-            MovieDetailsFeature()
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
         } withDependencies: {
-            $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
-            $0.movieDetailsClient.fetchVideos = { @Sendable _ in
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in
                 struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
-            $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
         }
         
-        await store.send(.movieDetailsPageOpened)
+        await store.send(.seriesDetailsPageOpened)
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -138,7 +138,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movie = MovieDetails.mock(id: 2)
+            $0.series = SeriesDetails.mock(id: 2)
         }
         
         await store.receive(\.fetchVideos) {
@@ -172,19 +172,19 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testCastFetchFailure() async {
-        let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
-            MovieDetailsFeature()
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
         } withDependencies: {
-            $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
-            $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchCast = { @Sendable _ in
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in
                 struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
-            $0.movieDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
         }
         
-        await store.send(.movieDetailsPageOpened)
+        await store.send(.seriesDetailsPageOpened)
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -192,7 +192,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movie = MovieDetails.mock(id: 2)
+            $0.series = SeriesDetails.mock(id: 2)
         }
         
         await store.receive(\.fetchVideos) {
@@ -226,19 +226,19 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testReviewsFetchFailure() async {
-        let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
-            MovieDetailsFeature()
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
         } withDependencies: {
-            $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
-            $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
-            $0.movieDetailsClient.fetchReviews = { @Sendable _ in
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in
                 struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
         }
         
-        await store.send(.movieDetailsPageOpened)
+        await store.send(.seriesDetailsPageOpened)
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -246,7 +246,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.success, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.movie = MovieDetails.mock(id: 2)
+            $0.series = SeriesDetails.mock(id: 2)
         }
         
         await store.receive(\.fetchVideos) {

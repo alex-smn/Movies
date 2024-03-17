@@ -13,3 +13,10 @@ extension Array where Element == MoviesListItem {
         return filter { seen.insert($0.id).inserted }
     }
 }
+
+extension Array where Element == SeriesListItem {
+    func uniqued() -> [SeriesListItem] {
+        var seen = Set<Int>()
+        return filter { seen.insert($0.id).inserted }
+    }
+}
