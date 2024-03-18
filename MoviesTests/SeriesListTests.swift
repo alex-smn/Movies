@@ -41,7 +41,7 @@ final class SeriesListFeatureTests: XCTestCase {
                 switch sorting {
                 case .popular:
                     return .mockPopular
-                case .nowPlaying:
+                case .onTheAir:
                     return .mockOnTheAir
                 case .topRated:
                     return .mockTopRated

@@ -86,7 +86,7 @@ extension MoviesListItem {
 }
 
 extension MoviesList {
-    static let mockPopular = Self(page: 1, results: [MoviesListItem.mock(id: 1), MoviesListItem.mock(id: 2)], totalPages: 1)
-    static let mockTopRated = Self(page: 1, results: [MoviesListItem.mock(id: 3)], totalPages: 2)
-    static let mockNowPlaying = Self(page: 1, results: [MoviesListItem.mock(id: 4), MoviesListItem.mock(id: 5), MoviesListItem.mock(id: 6)], totalPages: 3)
+    static let mockPopular = MoviesList(page: 1, results: [MoviesListItem.mock(id: 1), MoviesListItem.mock(id: 2)], totalPages: 1)
+    static let mockTopRated = MoviesList(page: 1, results: [MoviesListItem.mock(id: 3)], totalPages: 2)
+    static let mockNowPlaying = MoviesList(page: 1, results: [MoviesListItem.mock(id: 4), MoviesListItem.mock(id: 5), MoviesListItem.mock(id: 6)], totalPages: 3)
 }

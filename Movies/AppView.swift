@@ -22,6 +22,11 @@ struct AppView: View {
                 .tabItem {
                     Text("Series")
                 }   
+            
+            FavoritesListView(store: store.scope(state: \.favoritesTab, action: \.favoritesTab))
+                .tabItem {
+                    Text("Favorites")
+                }
         }
     }
 }

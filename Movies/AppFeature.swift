@@ -12,11 +12,13 @@ struct AppFeature {
     struct State {
         var moviesTab = MoviesListFeature.State()
         var seriesTab = SeriesListFeature.State()
+        var favoritesTab = FavoritesListFeature.State()
     }
     
     enum Action {
         case moviesTab(MoviesListFeature.Action)
         case seriesTab(SeriesListFeature.Action)
+        case favoritesTab(FavoritesListFeature.Action)
     }
     
     var body: some ReducerOf<Self> {
@@ -26,6 +28,10 @@ struct AppFeature {
         
         Scope(state: \.seriesTab, action: \.seriesTab) {
             SeriesListFeature()
+        }
+        
+        Scope(state: \.favoritesTab, action: \.favoritesTab) {
+            FavoritesListFeature()
         }
         
         Reduce { state, action in

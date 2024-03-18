@@ -8,19 +8,25 @@
 import Foundation
 
 class NetworkHelper {
-    static func performNetworkRequest<T: Decodable>(url: URL, responseType: T.Type) async throws -> T {
+    static func performNetworkRequest<T: Decodable>(url: URL, requestType: String = "GET", parameters: [String : Any]? = nil, responseType: T.Type) async throws -> T {
         let headers = [
           "accept": "application/json",
-          "Authorization": "Bearer \(Constants.apiToken)"
+          "content-type": "application/json",
+          "Authorization": "Bearer \(Constants.apiAccessToken)"
         ]
-
+        
         let request = NSMutableURLRequest(url: url,
                                                 cachePolicy: .useProtocolCachePolicy,
                                             timeoutInterval: 10.0)
-        request.httpMethod = "GET"
+        request.httpMethod = requestType
         request.allHTTPHeaderFields = headers
         request.cachePolicy = .useProtocolCachePolicy
         request.timeoutInterval = 5.0
+        
+        if let parameters {
+            let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
+            request.httpBody = postData as Data
+        }
         
         let (data, response) = try await URLSession.shared.data(for: request as URLRequest)
         

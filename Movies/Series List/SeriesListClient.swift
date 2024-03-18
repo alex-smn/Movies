@@ -86,7 +86,7 @@ extension SeriesListItem {
 }
 
 extension SeriesList {
-    static let mockPopular = Self(page: 1, results: [SeriesListItem.mock(id: 1), SeriesListItem.mock(id: 2)], totalPages: 1)
-    static let mockTopRated = Self(page: 1, results: [SeriesListItem.mock(id: 3)], totalPages: 2)
-    static let mockOnTheAir = Self(page: 1, results: [SeriesListItem.mock(id: 4), SeriesListItem.mock(id: 5), SeriesListItem.mock(id: 6)], totalPages: 3)
+    static let mockPopular = SeriesList(page: 1, results: [SeriesListItem.mock(id: 1), SeriesListItem.mock(id: 2)], totalPages: 1)
+    static let mockTopRated = SeriesList(page: 1, results: [SeriesListItem.mock(id: 3)], totalPages: 2)
+    static let mockOnTheAir = SeriesList(page: 1, results: [SeriesListItem.mock(id: 4), SeriesListItem.mock(id: 5), SeriesListItem.mock(id: 6)], totalPages: 3)
 }

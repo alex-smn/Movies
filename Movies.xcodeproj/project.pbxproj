@@ -20,7 +20,6 @@
 		FA74DE452BA359DA00E4CE30 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FA74DE442BA359DA00E4CE30 /* Kingfisher */; };
 		FA74DE472BA35C1400E4CE30 /* MoviesListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA74DE462BA35C1400E4CE30 /* MoviesListItemView.swift */; };
 		FA74DE492BA35F5D00E4CE30 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA74DE482BA35F5D00E4CE30 /* Constants.swift */; };
-		FAEB10442BA4826A006E04C4 /* MoviesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10432BA4826A006E04C4 /* MoviesListTests.swift */; };
 		FAEB104B2BA4C44B006E04C4 /* Array+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104A2BA4C44B006E04C4 /* Array+Extenstions.swift */; };
 		FAEB104E2BA4C58C006E04C4 /* MovieDetailsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104D2BA4C58C006E04C4 /* MovieDetailsFeature.swift */; };
 		FAEB10502BA4C5F3006E04C4 /* MovieDetailsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104F2BA4C5F3006E04C4 /* MovieDetailsClient.swift */; };
@@ -39,6 +38,12 @@
 		FAEB107E2BA70056006E04C4 /* SeriesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB107A2BA70056006E04C4 /* SeriesListView.swift */; };
 		FAEB10822BA713F9006E04C4 /* SeriesDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10802BA713F9006E04C4 /* SeriesDetailsTests.swift */; };
 		FAEB10832BA713F9006E04C4 /* SeriesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10812BA713F9006E04C4 /* SeriesListTests.swift */; };
+		FAEB10882BA727DC006E04C4 /* FavoritesListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10852BA727DC006E04C4 /* FavoritesListFeature.swift */; };
+		FAEB10892BA727DC006E04C4 /* FavoritesListClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10862BA727DC006E04C4 /* FavoritesListClient.swift */; };
+		FAEB108A2BA727DC006E04C4 /* FavoritesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10872BA727DC006E04C4 /* FavoritesListView.swift */; };
+		FAEB108C2BA75023006E04C4 /* LoginSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB108B2BA75023006E04C4 /* LoginSession.swift */; };
+		FAEB108F2BA757DE006E04C4 /* MoviesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10432BA4826A006E04C4 /* MoviesListTests.swift */; };
+		FAEB10912BA8744F006E04C4 /* FavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB10902BA8744F006E04C4 /* FavoritesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +90,11 @@
 		FAEB107F2BA7125C006E04C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FAEB10802BA713F9006E04C4 /* SeriesDetailsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesDetailsTests.swift; sourceTree = "<group>"; };
 		FAEB10812BA713F9006E04C4 /* SeriesListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesListTests.swift; sourceTree = "<group>"; };
+		FAEB10852BA727DC006E04C4 /* FavoritesListFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesListFeature.swift; sourceTree = "<group>"; };
+		FAEB10862BA727DC006E04C4 /* FavoritesListClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesListClient.swift; sourceTree = "<group>"; };
+		FAEB10872BA727DC006E04C4 /* FavoritesListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesListView.swift; sourceTree = "<group>"; };
+		FAEB108B2BA75023006E04C4 /* LoginSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSession.swift; sourceTree = "<group>"; };
+		FAEB10902BA8744F006E04C4 /* FavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +146,7 @@
 				FAEB104C2BA4C575006E04C4 /* Movie Details */,
 				FAEB10762BA70030006E04C4 /* Series List */,
 				FAEB10652BA6FFEA006E04C4 /* Series Details */,
+				FAEB10842BA72791006E04C4 /* Favorites */,
 				FA74DE1C2BA33C1700E4CE30 /* Assets.xcassets */,
 				FA74DE1E2BA33C1700E4CE30 /* Preview Content */,
 				FAEB10622BA6F9E1006E04C4 /* Common */,
@@ -169,6 +180,7 @@
 				FAEB105C2BA5DF9B006E04C4 /* MovieDetailsTests.swift */,
 				FAEB10812BA713F9006E04C4 /* SeriesListTests.swift */,
 				FAEB10802BA713F9006E04C4 /* SeriesDetailsTests.swift */,
+				FAEB10902BA8744F006E04C4 /* FavoritesTests.swift */,
 			);
 			path = MoviesTests;
 			sourceTree = "<group>";
@@ -188,6 +200,7 @@
 			children = (
 				FAEB10632BA6F9F3006E04C4 /* Views */,
 				FA74DE3F2BA3521F00E4CE30 /* NetworkHelper.swift */,
+				FAEB108B2BA75023006E04C4 /* LoginSession.swift */,
 				FA74DE482BA35F5D00E4CE30 /* Constants.swift */,
 				FAEB104A2BA4C44B006E04C4 /* Array+Extenstions.swift */,
 			);
@@ -208,9 +221,9 @@
 		FAEB10652BA6FFEA006E04C4 /* Series Details */ = {
 			isa = PBXGroup;
 			children = (
-				FAEB10712BA70025006E04C4 /* SeriesDetailsClient.swift */,
-				FAEB10702BA70025006E04C4 /* SeriesDetailsFeature.swift */,
 				FAEB106F2BA70025006E04C4 /* SeriesDetailsView.swift */,
+				FAEB10702BA70025006E04C4 /* SeriesDetailsFeature.swift */,
+				FAEB10712BA70025006E04C4 /* SeriesDetailsClient.swift */,
 			);
 			path = "Series Details";
 			sourceTree = "<group>";
@@ -224,6 +237,16 @@
 				FAEB10792BA70056006E04C4 /* SeriesListClient.swift */,
 			);
 			path = "Series List";
+			sourceTree = "<group>";
+		};
+		FAEB10842BA72791006E04C4 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				FAEB10872BA727DC006E04C4 /* FavoritesListView.swift */,
+				FAEB10852BA727DC006E04C4 /* FavoritesListFeature.swift */,
+				FAEB10862BA727DC006E04C4 /* FavoritesListClient.swift */,
+			);
+			path = Favorites;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -335,6 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAEB107C2BA70056006E04C4 /* SeriesListFeature.swift in Sources */,
+				FAEB10882BA727DC006E04C4 /* FavoritesListFeature.swift in Sources */,
 				FA74DE472BA35C1400E4CE30 /* MoviesListItemView.swift in Sources */,
 				FAEB104B2BA4C44B006E04C4 /* Array+Extenstions.swift in Sources */,
 				FAEB107E2BA70056006E04C4 /* SeriesListView.swift in Sources */,
@@ -347,6 +371,8 @@
 				FAEB10502BA4C5F3006E04C4 /* MovieDetailsClient.swift in Sources */,
 				FAEB107D2BA70056006E04C4 /* SeriesListClient.swift in Sources */,
 				FAEB104E2BA4C58C006E04C4 /* MovieDetailsFeature.swift in Sources */,
+				FAEB108C2BA75023006E04C4 /* LoginSession.swift in Sources */,
+				FAEB108A2BA727DC006E04C4 /* FavoritesListView.swift in Sources */,
 				FA14D4962BA472A600EDB1A4 /* MoviesListClient.swift in Sources */,
 				FA74DE352BA3434D00E4CE30 /* AppFeature.swift in Sources */,
 				FA74DE3C2BA34F5900E4CE30 /* MoviesListFeature.swift in Sources */,
@@ -357,6 +383,7 @@
 				FAEB10562BA4D731006E04C4 /* RatingView.swift in Sources */,
 				FAEB105F2BA5EA47006E04C4 /* CastView.swift in Sources */,
 				FAEB10752BA70025006E04C4 /* SeriesDetailsClient.swift in Sources */,
+				FAEB10892BA727DC006E04C4 /* FavoritesListClient.swift in Sources */,
 				FAEB107B2BA70056006E04C4 /* SeriesListItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,9 +392,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAEB10442BA4826A006E04C4 /* MoviesListTests.swift in Sources */,
 				FAEB10822BA713F9006E04C4 /* SeriesDetailsTests.swift in Sources */,
+				FAEB10912BA8744F006E04C4 /* FavoritesTests.swift in Sources */,
 				FAEB10832BA713F9006E04C4 /* SeriesListTests.swift in Sources */,
+				FAEB108F2BA757DE006E04C4 /* MoviesListTests.swift in Sources */,
 				FAEB105D2BA5DF9B006E04C4 /* MovieDetailsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
