@@ -168,7 +168,8 @@ struct MovieDetailsFeature {
                 
                 return .none
                 
-            case .reviewsFetched(.failure):
+            case let .reviewsFetched(.failure(error)):
+                print(error)
                 state.isLoading = false
                 state.hasReviewsFetchingError = true
                 

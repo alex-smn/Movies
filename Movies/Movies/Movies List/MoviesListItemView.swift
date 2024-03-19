@@ -31,15 +31,20 @@ struct MoviesListItemView: View {
                     .padding(.top, -20)
                 
                 Text(movie.title)
+                    .lineLimit(2)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 10)
                 
-                Text(movie.releaseDate, style: .date)
-                    .fontWeight(.light)
-                    .foregroundColor(.black)
-                    .padding(.horizontal, 10)
+                if let releaseDate = movie.releaseDate {
+                    Text(releaseDate, style: .date)
+                        .fontWeight(.light)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 10)
+                    
+                }
+                Spacer()
             }
             .padding(.bottom, 15)
         }

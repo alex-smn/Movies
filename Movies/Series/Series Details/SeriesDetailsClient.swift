@@ -64,7 +64,7 @@ extension DependencyValues {
 // MARK: - API models
 
 struct SeriesDetails: Codable, Equatable {
-    let backdropPath: String
+    let backdropPath: String?
     let episodeRunTime: [Int?]
     let firstAirDate: Date
     let genres: [Genre]
@@ -79,7 +79,7 @@ struct SeriesDetails: Codable, Equatable {
     let numberOfSeasons: Int
     let overview: String
     let popularity: Float
-    let posterPath: String
+    let posterPath: String?
     let seasons: [Season]
     let tagline: String
     let name: String

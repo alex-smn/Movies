@@ -34,7 +34,7 @@ struct ReviewView: View {
                 
                 VStack(alignment: .leading) {
                     Text("A review by \(review.author)")
-                        .font(.title2)
+                        .font(.title3)
                     
                     HStack {
                         if let rating = review.authorDetails.rating {
@@ -43,9 +43,10 @@ struct ReviewView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 15)
-                                Text("\(rating)")
+                                    .padding(.leading, 5)
+                                Text(String(format: "%.1f", rating))
+                                    .padding(.trailing, 5)
                             }
-                            .frame(width: 45)
                             .background(.blue)
                             .cornerRadius(5)
                         }

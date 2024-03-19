@@ -48,7 +48,7 @@ struct SeriesList: Codable {
     let totalPages: Int
 }
 
-struct SeriesListItem: Codable, Equatable {
+struct SeriesListItem: Codable, Equatable, Identifiable {
     let genreIds: [Int]
     let id: Int
     let originalLanguage: String
@@ -56,7 +56,7 @@ struct SeriesListItem: Codable, Equatable {
     let overview: String
     let popularity: Float
     let posterPath: String?
-    let firstAirDate: Date
+    let firstAirDate: Date?
     let name: String
     let voteAverage: Float
     let voteCount: Int

@@ -48,7 +48,7 @@ struct MoviesList: Codable {
     let totalPages: Int
 }
 
-struct MoviesListItem: Codable, Equatable {
+struct MoviesListItem: Codable, Equatable, Identifiable {
     let genreIds: [Int]
     let id: Int
     let originalLanguage: String
@@ -56,13 +56,18 @@ struct MoviesListItem: Codable, Equatable {
     let overview: String
     let popularity: Float
     let posterPath: String
-    let releaseDate: Date
+    let releaseDate: Date?
     let title: String
     let voteAverage: Float
     let voteCount: Int
 }
 
 // MARK: - Mock data
+extension MoviesList {
+    static let mockPopular = MoviesList(page: 1, results: [MoviesListItem.mock(id: 1), MoviesListItem.mock(id: 2)], totalPages: 1)
+    static let mockTopRated = MoviesList(page: 1, results: [MoviesListItem.mock(id: 3)], totalPages: 2)
+    static let mockNowPlaying = MoviesList(page: 1, results: [MoviesListItem.mock(id: 4), MoviesListItem.mock(id: 5), MoviesListItem.mock(id: 6)], totalPages: 3)
+}
 
 extension MoviesListItem {
     static func mock(id: Int) -> MoviesListItem {
@@ -83,10 +88,4 @@ extension MoviesListItem {
             voteCount: 25764
         )
     }
-}
-
-extension MoviesList {
-    static let mockPopular = MoviesList(page: 1, results: [MoviesListItem.mock(id: 1), MoviesListItem.mock(id: 2)], totalPages: 1)
-    static let mockTopRated = MoviesList(page: 1, results: [MoviesListItem.mock(id: 3)], totalPages: 2)
-    static let mockNowPlaying = MoviesList(page: 1, results: [MoviesListItem.mock(id: 4), MoviesListItem.mock(id: 5), MoviesListItem.mock(id: 6)], totalPages: 3)
 }

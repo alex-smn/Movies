@@ -64,16 +64,16 @@ extension DependencyValues {
 // MARK: - API models
 
 struct MovieDetails: Codable, Equatable {
-    let backdropPath: String
+    let backdropPath: String?
     let budget: Int
     let genres: [Genre]
     let id: Int
-    let imdbId: String
+    let imdbId: String?
     let originalLanguage: String
     let originalTitle: String
     let overview: String
     let popularity: Float
-    let posterPath: String
+    let posterPath: String?
     let releaseDate: Date
     let revenue: Int
     let tagline: String
@@ -110,7 +110,6 @@ struct MovieCast: Codable, Equatable {
 }
 
 struct Cast: Codable, Equatable {
-    let adult: Bool
     let gender: Int
     let id: Int
     let knownForDepartment: String
@@ -144,7 +143,7 @@ struct Author: Codable, Equatable {
     let name: String
     let username: String
     let avatarPath: String?
-    let rating: Int?
+    let rating: Float?
 }
 
 // MARK: - Mock data
@@ -215,7 +214,6 @@ extension MovieCast {
 extension Cast {
     static func mock() -> Cast {
         Cast(
-            adult: false,
             gender: 2,
             id: 504,
             knownForDepartment: "Acting",

@@ -48,10 +48,10 @@ extension FavoritesListClient: TestDependencyKey {
 extension FavoritesListClient: DependencyKey {
     static let liveValue = Self(
         fetchMovies: { page, accountId in
-            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiFavoritesUrlFormat)\(accountId)/favorite/movies?page=\(page)")!, responseType: MoviesList.self)
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiAccountUrl)/\(accountId)/favorite/movies?page=\(page)")!, responseType: MoviesList.self)
         },
         fetchSeries: { page, accountId in
-            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiFavoritesUrlFormat)\(accountId)/favorite/tv?page=\(page)")!, responseType: SeriesList.self)
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiAccountUrl)/\(accountId)/favorite/tv?page=\(page)")!, responseType: SeriesList.self)
         },
         requestToken: {
             return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiRequestTokenUrl)")!, responseType: RequestToken.self)
@@ -65,7 +65,7 @@ extension FavoritesListClient: DependencyKey {
             return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiCreateSessionIDUrl)")!, requestType: "POST", parameters: parameters, responseType: Session.self)
         },
         getAccountDetails: { sessionId in
-            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiAccountDetailsUrl)?session_id=\(sessionId)")!, responseType: Account.self)
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiAccountUrl)?session_id=\(sessionId)")!, responseType: Account.self)
         }
     )
 }

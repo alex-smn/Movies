@@ -1,8 +1,8 @@
 //
-//  SeriesDetailsView.swift
+//  MovieDetailsView.swift
 //  Movies
 //
-//  Created by Alexander Livshits on 17/03/2024.
+//  Created by Alexander Livshits on 15/03/2024.
 //
 
 import Kingfisher
@@ -10,8 +10,8 @@ import ComposableArchitecture
 import SwiftUI
 import AVKit
 
-struct SeriesDetailsView: View {
-    let store: StoreOf<SeriesDetailsFeature>
+struct MovieDetailsView: View {
+    let store: StoreOf<MovieDetailsFeature>
     
     private let castRows = [
         GridItem(.fixed(320), spacing: 15, alignment: .leading)
@@ -20,16 +20,16 @@ struct SeriesDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if let series = store.series {
+                if let movie = store.movie {
                     ZStack(alignment: .leading) {
-                        if let backdropUrl = URL(string: "\(Constants.backdropUrlFormat)\(series.backdropPath)") {
+                        if let backdropPath = movie.backdropPath, let backdropUrl = URL(string: "\(Constants.backdropUrlFormat)\(backdropPath)") {
                             KFImage(backdropUrl)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: .infinity)
                         }
                         
-                        if let posterUrl = URL(string: "\(Constants.posterUrlFormat)\(series.posterPath)") {
+                        if let posterPath = movie.posterPath, let posterUrl = URL(string: "\(Constants.posterUrlFormat)\(posterPath)") {
                             KFImage(posterUrl)
                                 .resizable()
                                 .scaledToFit()
@@ -46,19 +46,19 @@ struct SeriesDetailsView: View {
                     .frame(height: 220)
                     
                     VStack(spacing: 20) {
-                        Text(series.name)
+                        Text(movie.title)
                             .font(.title)
                         
                         
                         HStack {
-                            RatingView(rating: series.voteAverage)
+                            RatingView(rating: movie.voteAverage)
                             Spacer()
-                            ForEach(series.genres, id: \.id) { genre in
+                            ForEach(movie.genres, id: \.id) { genre in
                                 Text(genre.name)
                             }
                         }
                         
-                        Text(series.tagline)
+                        Text(movie.tagline)
                             .italic()
                         
                         HStack {
@@ -68,7 +68,7 @@ struct SeriesDetailsView: View {
                             Spacer()
                         }
                         
-                        Text(series.overview)
+                        Text(movie.overview)
                             .multilineTextAlignment(.leading)
                             .lineLimit(100)
                         
@@ -79,7 +79,7 @@ struct SeriesDetailsView: View {
                                 
                         }
                         
-                        if let cast = store.castPreview {
+                        if let cast = store.castPreview, !cast.isEmpty {
                             HStack {
                                 Text("Top Billed cast")
                                     .font(.title)
@@ -122,28 +122,28 @@ struct SeriesDetailsView: View {
                 }
                 
                 if store.hasDetailsFetchingError {
-                    Text("Error fetching series details")
+                    Text("Error fetching movie details")
                 }
                 if store.hasVideosFetchingError {
-                    Text("Error fetching series trailer")
+                    Text("Error fetching movie trailer")
                 }
                 if store.hasCastFetchingError {
-                    Text("Error fetching series cast")
+                    Text("Error fetching movie cast")
                 }
                 if store.hasReviewsFetchingError {
-                    Text("Error fetching series reviews")
+                    Text("Error fetching movie reviews")
                 }
             }
         }
         .multilineTextAlignment(.center)
         .onAppear {
-            store.send(.seriesDetailsPageOpened)
+            store.send(.movieDetailsPageOpened)
         }
     }
 }
 
 #Preview {
-    SeriesDetailsView(store: Store(initialState: SeriesDetailsFeature.State(seriesId: 278), reducer: {
-        SeriesDetailsFeature()
+    MovieDetailsView(store: Store(initialState: MovieDetailsFeature.State(movieId: 278), reducer: {
+        MovieDetailsFeature()
     }))
 }
