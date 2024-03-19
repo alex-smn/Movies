@@ -23,16 +23,14 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(spacing: 20) {
                     TextField("Search", text: $store.searchQuery.sending(\.searchQueryChanged))
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.none)
                         .autocorrectionDisabled()
                     
                     if store.searchQuery.isEmpty {
-                        if !store.trending.isEmpty {
-                            trendingView
-                        }
+                        trendingView
                     } else {
                         searchView
                     }
@@ -57,7 +55,15 @@ struct HomeView: View {
                 try await Task.sleep(for: .milliseconds(300))
                 await store.send(.searchQueryChangedDebounced).finish()
             } catch {
-                // TODO: implement
+                switch store.searchFilter {
+                case .movies:
+                    store.send(.searchMoviesResponse(.failure(error)))
+                case .series:
+                    store.send(.searchSeriesResponse(.failure(error)))
+                case .person:
+                    store.send(.searchPersonsResponse(.failure(error)))
+                }
+                
             }
         }
     }
@@ -74,6 +80,18 @@ struct HomeView: View {
             }
             
             VStack(alignment: .leading) {
+                if store.isLoading {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+                
+                if let searchError = store.searchError {
+                    Text(searchError)
+                }
+                
                 switch store.searchFilter {
                 case .movies:
                     ForEach(store.searchMoviesResults) { movie in
@@ -141,41 +159,55 @@ struct HomeView: View {
     
     private var trendingView: some View {
         VStack(alignment: .leading) {
-            Text("Trending")
-                .font(.title)
+            if store.isLoading {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+            }
             
-            periodPickerView
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: trendingRows) {
-                    ForEach(Array(store.trending.enumerated()), id: \.1.id) { index, program in
-                        if let movie = program.toMoviesListItem() {
-                            NavigationLink(
-                                state: HomeFeature.Path.State.movie(MovieDetailsFeature.State(movieId: movie.id))
-                            ) {
-                                MoviesListItemView(movie: movie)
-                                    .frame(width: 180)
-                                    .onAppear {
-                                        if store.trending.count - 2 == index {
-                                            store.send(.listEndReached)
+            if !store.trending.isEmpty {
+                Text("Trending")
+                    .font(.title)
+                
+                periodPickerView
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: trendingRows) {
+                        ForEach(Array(store.trending.enumerated()), id: \.1.id) { index, program in
+                            if let movie = program.toMoviesListItem() {
+                                NavigationLink(
+                                    state: HomeFeature.Path.State.movie(MovieDetailsFeature.State(movieId: movie.id))
+                                ) {
+                                    MoviesListItemView(movie: movie)
+                                        .frame(width: 180)
+                                        .onAppear {
+                                            if store.trending.count - 2 == index {
+                                                store.send(.listEndReached)
+                                            }
                                         }
-                                    }
-                            }
-                        } else if let series = program.toSeriesListItem() {
-                            NavigationLink(
-                                state: HomeFeature.Path.State.series(SeriesDetailsFeature.State(seriesId: series.id))
-                            ) {
-                                SeriesListItemView(series: series)
-                                    .frame(width: 180)
-                                    .onAppear {
-                                        if store.trending.count - 2 == index {
-                                            store.send(.listEndReached)
+                                }
+                            } else if let series = program.toSeriesListItem() {
+                                NavigationLink(
+                                    state: HomeFeature.Path.State.series(SeriesDetailsFeature.State(seriesId: series.id))
+                                ) {
+                                    SeriesListItemView(series: series)
+                                        .frame(width: 180)
+                                        .onAppear {
+                                            if store.trending.count - 2 == index {
+                                                store.send(.listEndReached)
+                                            }
                                         }
-                                    }
+                                }
                             }
                         }
                     }
                 }
+            }
+            
+            if let error = store.fetchingError {
+                Text(error)
             }
         }
     }

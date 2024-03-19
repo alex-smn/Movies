@@ -12,17 +12,17 @@ import Foundation
 struct SeriesDetailsFeature {
     @ObservableState
     struct State: Equatable {
-        var seriesId: Int
+        var seriesId: Int = 0
         var series: SeriesDetails?
         var videos: [Video]?
         var castPreview: [Cast]?
         var reviewsPreview: [Review]?
         var totalReviews: Int = 0
         var isLoading = false
-        var hasDetailsFetchingError = false
-        var hasVideosFetchingError = false
-        var hasCastFetchingError = false
-        var hasReviewsFetchingError = false
+        var detailsFetchingError: String?
+        var videosFetchingError: String?
+        var castFetchingError: String?
+        var reviewsFetchingError: String?
     }
     
     enum Action {
@@ -44,10 +44,10 @@ struct SeriesDetailsFeature {
             switch action {
             case .seriesDetailsPageOpened:
                 state.isLoading = false
-                state.hasDetailsFetchingError = false
-                state.hasVideosFetchingError = false
-                state.hasCastFetchingError = false
-                state.hasReviewsFetchingError = false
+                state.detailsFetchingError = nil
+                state.videosFetchingError = nil
+                state.castFetchingError = nil
+                state.reviewsFetchingError = nil
                 
                 return .run { send in
                     await send(.fetchDetails)
@@ -55,7 +55,7 @@ struct SeriesDetailsFeature {
                 
             case .fetchDetails:
                 state.isLoading = true
-                state.hasDetailsFetchingError = false
+                state.detailsFetchingError = nil
                 
                 return .run { [seriesId = state.seriesId] send in
                     await send(
@@ -69,16 +69,16 @@ struct SeriesDetailsFeature {
                 
             case let .detailsFetched(.success(response)):
                 state.isLoading = false
-                state.hasDetailsFetchingError = false
+                state.detailsFetchingError = nil
                 state.series = response
                 
                 return .run { send in
                     await send(.fetchVideos)
                 }
                 
-            case .detailsFetched(.failure):
+            case let .detailsFetched(.failure(error)):
                 state.isLoading = false
-                state.hasDetailsFetchingError = true
+                state.detailsFetchingError = error.localizedDescription
                 
                 return .run { send in
                     await send(.fetchVideos)
@@ -86,7 +86,7 @@ struct SeriesDetailsFeature {
                 
             case .fetchVideos:
                 state.isLoading = true
-                state.hasVideosFetchingError = false
+                state.videosFetchingError = nil
                 
                 return .run { [seriesId = state.seriesId] send in
                     await send(
@@ -101,15 +101,15 @@ struct SeriesDetailsFeature {
             case let .videosFetched(.success(response)):
                 state.videos = response.results
                 state.isLoading = false
-                state.hasVideosFetchingError = false
+                state.videosFetchingError = nil
                 
                 return .run { send in
                     await send(.fetchCast)
                 }
                 
-            case .videosFetched(.failure):
+            case let .videosFetched(.failure(error)):
                 state.isLoading = false
-                state.hasVideosFetchingError = true
+                state.videosFetchingError = error.localizedDescription
                 
                 return .run { send in
                     await send(.fetchCast)
@@ -117,7 +117,7 @@ struct SeriesDetailsFeature {
                 
             case .fetchCast:
                 state.isLoading = true
-                state.hasCastFetchingError = false
+                state.castFetchingError = nil
                 
                 return .run { [seriesId = state.seriesId] send in
                     await send(
@@ -132,15 +132,15 @@ struct SeriesDetailsFeature {
             case let .castFetched(.success(response)):
                 state.castPreview = Array(response.cast.prefix(10))
                 state.isLoading = false
-                state.hasCastFetchingError = false
+                state.castFetchingError = nil
                 
                 return .run { send in
                     await send(.fetchReviews)
                 }
                 
-            case .castFetched(.failure):
+            case let .castFetched(.failure(error)):
                 state.isLoading = false
-                state.hasCastFetchingError = true
+                state.castFetchingError = error.localizedDescription
                 
                 return .run { send in
                     await send(.fetchReviews)
@@ -148,7 +148,7 @@ struct SeriesDetailsFeature {
                 
             case .fetchReviews:
                 state.isLoading = true
-                state.hasReviewsFetchingError = false
+                state.reviewsFetchingError = nil
                 
                 return .run { [seriesId = state.seriesId] send in
                     await send(
@@ -164,13 +164,13 @@ struct SeriesDetailsFeature {
                 state.reviewsPreview = response.results
                 state.totalReviews = response.totalResults
                 state.isLoading = false
-                state.hasReviewsFetchingError = false
+                state.reviewsFetchingError = nil
                 
                 return .none
                 
-            case .reviewsFetched(.failure):
+            case let .reviewsFetched(.failure(error)):
                 state.isLoading = false
-                state.hasReviewsFetchingError = true
+                state.reviewsFetchingError = error.localizedDescription
                 
                 return .none
             }

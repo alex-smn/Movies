@@ -121,17 +121,17 @@ struct MovieDetailsView: View {
                     ProgressView()
                 }
                 
-                if store.hasDetailsFetchingError {
-                    Text("Error fetching movie details")
+                if let detailsFetchingError = store.detailsFetchingError {
+                    Text(detailsFetchingError)
                 }
-                if store.hasVideosFetchingError {
-                    Text("Error fetching movie trailer")
+                if let videosFetchingError = store.videosFetchingError {
+                    Text(videosFetchingError)
                 }
-                if store.hasCastFetchingError {
-                    Text("Error fetching movie cast")
+                if let castFetchingError = store.castFetchingError {
+                    Text(castFetchingError)
                 }
-                if store.hasReviewsFetchingError {
-                    Text("Error fetching movie reviews")
+                if let reviewsFetchingError = store.reviewsFetchingError {
+                    Text(reviewsFetchingError)
                 }
             }
         }

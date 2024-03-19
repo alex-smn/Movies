@@ -18,7 +18,7 @@ struct SeriesListFeature {
         var sorting: Sorting = .topRated
         var series: [SeriesListItem] = []
         var isLoading = false
-        var hasFetchingError = false
+        var fetchingError: String?
     }
     
     enum Action {
@@ -64,7 +64,7 @@ struct SeriesListFeature {
         Reduce { state, action in
             switch action {
             case .fetchSeries:
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 guard state.page <= state.totalPages else { return .none }
                 state.isLoading = true
                 
@@ -80,22 +80,22 @@ struct SeriesListFeature {
                 
             case let .seriesFetched(.success(response)):
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 state.series = (state.series + response.results).uniqued()
                 state.totalPages = response.totalPages
                 
                 return .none
                 
-            case .seriesFetched(.failure):
+            case let .seriesFetched(.failure(error)):
                 state.isLoading = false
-                state.hasFetchingError = true
+                state.fetchingError = error.localizedDescription
                 
                 return .none
                 
             case .seriesPageOpened:
                 state.page = 1
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 
                 return .run { send in
                     await send(.fetchSeries)

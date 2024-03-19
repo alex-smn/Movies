@@ -21,8 +21,8 @@ struct HomeFeature {
         var trendingPage: Int = 1
         var searchPage: Int = 1
         var isLoading = false
-        var hasFetchingError = false
-        var hasSearchError = false
+        var fetchingError: String?
+        var searchError: String?
         var period: Period = .day
         var totalTrendingPages: Int = 1
         var totalSearchPages: Int = 1
@@ -91,14 +91,14 @@ struct HomeFeature {
             case .homePageOpened:
                 state.trendingPage = 1
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 
                 return .run { send in
                     await send(.fetchTrending)
                 }
                 
             case .fetchTrending:
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 guard state.trendingPage <= state.totalTrendingPages else { return .none }
                 state.isLoading = true
                 
@@ -120,8 +120,9 @@ struct HomeFeature {
                 
                 return .none
                 
-            case .trendingFetched(.failure):
-                state.hasFetchingError = true
+            case let .trendingFetched(.failure(error)):
+                state.isLoading = false
+                state.fetchingError = error.localizedDescription
                 
                 return .none
                 
@@ -152,6 +153,7 @@ struct HomeFeature {
                 return .none
                 
             case .searchQueryChangedDebounced:
+                state.searchError = nil
                 guard !state.searchQuery.isEmpty else { return .none }
                 state.isLoading = true
                 
@@ -188,6 +190,7 @@ struct HomeFeature {
                 
             case let .searchMoviesResponse(.success(result)):
                 state.isLoading = false
+                state.searchError = nil
                 state.searchMoviesResults = result.results.uniqued()
                 state.totalSearchPages = result.totalPages
                 state.searchSeriesResults = []
@@ -195,9 +198,9 @@ struct HomeFeature {
                 
                 return .none
                 
-            case .searchMoviesResponse(.failure):
+            case let .searchMoviesResponse(.failure(error)):
                 state.isLoading = false
-                state.hasSearchError = true
+                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []
@@ -206,6 +209,7 @@ struct HomeFeature {
             
             case let .searchSeriesResponse(.success(result)):
                 state.isLoading = false
+                state.searchError = nil
                 state.searchSeriesResults = result.results.uniqued()
                 state.totalSearchPages = result.totalPages
                 state.searchMoviesResults = []
@@ -213,9 +217,9 @@ struct HomeFeature {
                 
                 return .none
                 
-            case .searchSeriesResponse(.failure):
+            case let .searchSeriesResponse(.failure(error)):
                 state.isLoading = false
-                state.hasSearchError = true
+                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []
@@ -224,6 +228,7 @@ struct HomeFeature {
             
             case let .searchPersonsResponse(.success(result)):
                 state.isLoading = false
+                state.searchError = nil
                 state.searchPersonsResults = result.results.uniqued()
                 state.totalSearchPages = result.totalPages
                 state.searchMoviesResults = []
@@ -231,9 +236,9 @@ struct HomeFeature {
                 
                 return .none
                 
-            case .searchPersonsResponse(.failure):
+            case let .searchPersonsResponse(.failure(error)):
                 state.isLoading = false
-                state.hasSearchError = true
+                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []

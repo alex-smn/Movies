@@ -38,8 +38,8 @@ struct MoviesListView: View {
                             .padding(.top, 10)
                         }
                         
-                        if store.hasFetchingError {
-                            Text("Error: can't fetch movies")
+                        if let error = store.fetchingError {
+                            Text(error)
                         }
                         
                         if store.isLoading {
@@ -47,29 +47,12 @@ struct MoviesListView: View {
                         }
                     }
                 }
+                .refreshable {
+                    store.send(.moviesPageOpened)
+                }
                 .padding(.top, 60)
                 
-                Menu {
-                    Button(MoviesListFeature.Sorting.topRated.name) {
-                        store.send(.sortingSet(.topRated))
-                    }
-                    
-                    Button(MoviesListFeature.Sorting.nowPlaying.name) {
-                        store.send(.sortingSet(.nowPlaying))
-                    }
-                    
-                    Button(MoviesListFeature.Sorting.popular.name) {
-                        store.send(.sortingSet(.popular))
-                    }
-                } label: {
-                    Text(store.sorting.name)
-                    Image(systemName: "chevron.down")
-                }
-                .padding(.vertical, 20)
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .foregroundColor(colorScheme == .dark ? .white : .black)
-                .background(Color(UIColor.systemBackground))
+                menuView
             }
             .clipped()
             .padding(.horizontal, 15)
@@ -79,6 +62,30 @@ struct MoviesListView: View {
         } destination: { store in
             MovieDetailsView(store: store)
         }
+    }
+    
+    private var menuView: some View {
+        Menu {
+            Button(MoviesListFeature.Sorting.topRated.name) {
+                store.send(.sortingSet(.topRated))
+            }
+            
+            Button(MoviesListFeature.Sorting.nowPlaying.name) {
+                store.send(.sortingSet(.nowPlaying))
+            }
+            
+            Button(MoviesListFeature.Sorting.popular.name) {
+                store.send(.sortingSet(.popular))
+            }
+        } label: {
+            Text(store.sorting.name)
+            Image(systemName: "chevron.down")
+        }
+        .padding(.vertical, 20)
+        .frame(maxWidth: .infinity)
+        .frame(height: 60)
+        .foregroundColor(colorScheme == .dark ? .white : .black)
+        .background(Color(UIColor.systemBackground))
     }
 }
 

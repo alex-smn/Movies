@@ -38,8 +38,8 @@ struct SeriesListView: View {
                             .padding(.top, 10)
                         }
                         
-                        if store.hasFetchingError {
-                            Text("Error: can't fetch series")
+                        if let error = store.fetchingError {
+                            Text(error)
                         }
                         
                         if store.isLoading {
@@ -47,29 +47,12 @@ struct SeriesListView: View {
                         }
                     }
                 }
+                .refreshable {
+                    store.send(.seriesPageOpened)
+                }
                 .padding(.top, 60)
                 
-                Menu {
-                    Button(SeriesListFeature.Sorting.topRated.name) {
-                        store.send(.sortingSet(.topRated))
-                    }
-                    
-                    Button(SeriesListFeature.Sorting.onTheAir.name) {
-                        store.send(.sortingSet(.onTheAir))
-                    }
-                    
-                    Button(SeriesListFeature.Sorting.popular.name) {
-                        store.send(.sortingSet(.popular))
-                    }
-                } label: {
-                    Text(store.sorting.name)
-                    Image(systemName: "chevron.down")
-                }
-                .padding(.vertical, 20)
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .foregroundColor(colorScheme == .dark ? .white : .black)
-                .background(Color(UIColor.systemBackground))
+                menuView
             }
             .clipped()
             .padding(.horizontal, 15)
@@ -79,6 +62,30 @@ struct SeriesListView: View {
         } destination: { store in
             SeriesDetailsView(store: store)
         }
+    }
+    
+    private var menuView: some View {
+        Menu {
+            Button(SeriesListFeature.Sorting.topRated.name) {
+                store.send(.sortingSet(.topRated))
+            }
+            
+            Button(SeriesListFeature.Sorting.onTheAir.name) {
+                store.send(.sortingSet(.onTheAir))
+            }
+            
+            Button(SeriesListFeature.Sorting.popular.name) {
+                store.send(.sortingSet(.popular))
+            }
+        } label: {
+            Text(store.sorting.name)
+            Image(systemName: "chevron.down")
+        }
+        .padding(.vertical, 20)
+        .frame(maxWidth: .infinity)
+        .frame(height: 60)
+        .foregroundColor(colorScheme == .dark ? .white : .black)
+        .background(Color(UIColor.systemBackground))
     }
 }
 

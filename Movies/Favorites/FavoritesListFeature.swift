@@ -29,7 +29,7 @@ struct FavoritesListFeature {
         var movies: [MoviesListItem] = []
         var series: [SeriesListItem] = []
         var isLoading = false
-        var hasFetchingError = false
+        var fetchingError: String?
         var hasAuthenticationError = false
     }
     
@@ -73,7 +73,7 @@ struct FavoritesListFeature {
             case .favoritesPageOpened:
                 state.page = 1
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 
                 if state.accountId != nil {
                     return .run { send in
@@ -228,7 +228,7 @@ struct FavoritesListFeature {
                 return .none
                 
             case .fetchFavorites:
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 guard state.page <= state.totalPages else { return .none }
                 state.isLoading = true
                 
@@ -260,29 +260,29 @@ struct FavoritesListFeature {
                 
             case let .moviesFetched(.success(response)):
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 state.movies = (state.movies + response.results).uniqued()
                 state.totalPages = response.totalPages
                 
                 return .none
                 
-            case .moviesFetched(.failure):
+            case let .moviesFetched(.failure(error)):
                 state.isLoading = false
-                state.hasFetchingError = true
+                state.fetchingError = error.localizedDescription
                 
                 return .none
                 
             case let .seriesFetched(.success(response)):
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 state.series = (state.series + response.results).uniqued()
                 state.totalPages = response.totalPages
                 
                 return .none
                 
-            case .seriesFetched(.failure):
+            case let .seriesFetched(.failure(error)):
                 state.isLoading = false
-                state.hasFetchingError = true
+                state.fetchingError = error.localizedDescription
                 
                 return .none
                 

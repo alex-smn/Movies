@@ -56,8 +56,8 @@ struct FavoritesListView: View {
                             .padding(.top, 10)
                         }
                         
-                        if store.hasFetchingError {
-                            Text("Error: can't fetch movies")
+                        if let error = store.fetchingError {
+                            Text(error)
                         }
                         
                         if store.hasAuthenticationError {
@@ -68,6 +68,9 @@ struct FavoritesListView: View {
                             ProgressView()
                         }
                     }
+                }
+                .refreshable {
+                    store.send(.favoritesPageOpened)
                 }
                 .padding(.top, 60)
                 

@@ -18,7 +18,7 @@ struct MoviesListFeature {
         var sorting: Sorting = .topRated
         var movies: [MoviesListItem] = []
         var isLoading = false
-        var hasFetchingError = false
+        var fetchingError: String?
     }
     
     enum Action {
@@ -64,7 +64,7 @@ struct MoviesListFeature {
         Reduce { state, action in
             switch action {
             case .fetchMovies:
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 guard state.page <= state.totalPages else { return .none }
                 state.isLoading = true
                 
@@ -80,22 +80,22 @@ struct MoviesListFeature {
                 
             case let .moviesFetched(.success(response)):
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 state.movies = (state.movies + response.results).uniqued()
                 state.totalPages = response.totalPages
                 
                 return .none
                 
-            case .moviesFetched(.failure):
+            case let .moviesFetched(.failure(error)):
                 state.isLoading = false
-                state.hasFetchingError = true
+                state.fetchingError = error.localizedDescription
                 
                 return .none
                 
             case .moviesPageOpened:
                 state.page = 1
                 state.isLoading = false
-                state.hasFetchingError = false
+                state.fetchingError = nil
                 
                 return .run { send in
                     await send(.fetchMovies)
