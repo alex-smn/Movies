@@ -53,7 +53,7 @@ struct SeriesDetailsView: View {
                         HStack {
                             RatingView(rating: series.voteAverage)
                             Spacer()
-                            ForEach(series.genres, id: \.id) { genre in
+                            ForEach(series.genres.prefix(3), id: \.id) { genre in
                                 Text(genre.name)
                             }
                         }
@@ -76,7 +76,6 @@ struct SeriesDetailsView: View {
                         if let videos = store.videos, let trailer = videos.first(where: { $0.type == "Trailer" }) {
                             YouTubeView(videoId: trailer.key)
                                 .frame(height: 200)
-                                
                         }
                         
                         if let cast = store.castPreview, !cast.isEmpty {
@@ -97,6 +96,54 @@ struct SeriesDetailsView: View {
                             }
                         }
                         
+                        if let season = series.seasons.first(where: { $0.seasonNumber == series.numberOfSeasons }) {
+                            HStack {
+                                Text("Last Season")
+                                    .font(.title)
+                                Spacer()
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text("Season \(season.seasonNumber)")
+                                    .font(.title3)
+                                
+                                HStack {
+                                    HStack(spacing: 3) {
+                                        Image(systemName: "star.fill")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 15)
+                                            .padding(.leading, 8)
+                                        Text(String(format: "%.1f", season.voteAverage))
+                                            .padding(.trailing, 8)
+                                    }
+                                    .background(.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(5)
+                                    
+                                    if let episodeCount = season.episodeCount {
+                                        Text("\(episodeCount) Episodes")
+                                    }
+                                }
+                                
+                                if !season.overview.isEmpty {
+                                    Text(season.overview)
+                                        .multilineTextAlignment(.leading)
+                                } else {
+                                    HStack(spacing: 0) {
+                                        Text("Season \(season.seasonNumber) premiered on ")
+                                        Text(season.airDate ?? Date.now, style: .date)
+                                    }
+                                }
+                            }
+                            .padding()
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.gray, lineWidth: 1)
+                                    .shadow(radius: 5)
+                            }
+                        }
+                        
                         if let reviews = store.reviewsPreview {
                             HStack {
                                 Text("Reviews")
@@ -106,7 +153,15 @@ struct SeriesDetailsView: View {
                                     .foregroundColor(.gray)
                                 
                                 Spacer()
+                                if store.totalReviews > 0 {
+                                    NavigationLink {
+                                        ReviewsListView(reviews: reviews)
+                                    } label: {
+                                        Text("View all")
+                                    }
+                                }
                             }
+                            
                             if !reviews.isEmpty {
                                 ReviewView(review: reviews[0])
                             }

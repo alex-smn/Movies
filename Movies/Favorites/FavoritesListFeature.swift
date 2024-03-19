@@ -293,3 +293,26 @@ struct FavoritesListFeature {
         .forEach(\.path, action: \.path)
     }
 }
+//
+//@Reducer
+//enum Shared {
+//    @ObservableState
+//    struct State: Equatable {
+//        var accountId: Int?
+//    }
+//    
+//    enum Action {
+//        case setAccountId(Int)
+//    }
+//    
+//    var body: some ReducerOf<Self> {
+//        Reduce { state, action in
+//            switch action {
+//            case let .setAccountId(id):
+//                state.accountId = id
+//                
+//                return .none
+//            }
+//        }
+//    }
+//}

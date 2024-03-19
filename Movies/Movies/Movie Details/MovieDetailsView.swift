@@ -53,7 +53,7 @@ struct MovieDetailsView: View {
                         HStack {
                             RatingView(rating: movie.voteAverage)
                             Spacer()
-                            ForEach(movie.genres, id: \.id) { genre in
+                            ForEach(movie.genres.prefix(3), id: \.id) { genre in
                                 Text(genre.name)
                             }
                         }
@@ -106,7 +106,15 @@ struct MovieDetailsView: View {
                                     .foregroundColor(.gray)
                                 
                                 Spacer()
+                                if store.totalReviews > 0 {
+                                    NavigationLink {
+                                        ReviewsListView(reviews: reviews)
+                                    } label: {
+                                        Text("View all")
+                                    }
+                                }
                             }
+                            
                             if !reviews.isEmpty {
                                 ReviewView(review: reviews[0])
                             }

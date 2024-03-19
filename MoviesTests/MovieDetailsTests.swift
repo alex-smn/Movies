@@ -64,11 +64,12 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testDetailsFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
             MovieDetailsFeature()
         } withDependencies: {
             $0.movieDetailsClient.fetchDetails = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
@@ -84,7 +85,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasDetailsFetchingError = true
+            $0.detailsFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchVideos) {
@@ -118,12 +119,13 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testVideosFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
             MovieDetailsFeature()
         } withDependencies: {
             $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
             $0.movieDetailsClient.fetchVideos = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
@@ -147,7 +149,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.videosFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasVideosFetchingError = true
+            $0.videosFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchCast) {
@@ -172,13 +174,14 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testCastFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
             MovieDetailsFeature()
         } withDependencies: {
             $0.movieDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
             $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.movieDetailsClient.fetchCast = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.movieDetailsClient.fetchReviews = { @Sendable _ in .mock() }
@@ -210,7 +213,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.castFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasCastFetchingError = true
+            $0.castFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchReviews) {
@@ -226,6 +229,8 @@ final class MovieDetailsTests: XCTestCase {
     
     @MainActor
     func testReviewsFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: MovieDetailsFeature.State(movieId: 2)) {
             MovieDetailsFeature()
         } withDependencies: {
@@ -233,7 +238,6 @@ final class MovieDetailsTests: XCTestCase {
             $0.movieDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.movieDetailsClient.fetchCast = { @Sendable _ in .mock() }
             $0.movieDetailsClient.fetchReviews = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
         }
@@ -273,7 +277,7 @@ final class MovieDetailsTests: XCTestCase {
         
         await store.receive(\.reviewsFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasReviewsFetchingError = true
+            $0.reviewsFetchingError = SomethingWrong().localizedDescription
         }
     }
 }

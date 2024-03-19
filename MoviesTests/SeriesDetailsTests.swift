@@ -64,11 +64,12 @@ final class SeriesDetailsTests: XCTestCase {
     
     @MainActor
     func testDetailsFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
             SeriesDetailsFeature()
         } withDependencies: {
             $0.seriesDetailsClient.fetchDetails = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
@@ -84,7 +85,7 @@ final class SeriesDetailsTests: XCTestCase {
         
         await store.receive(\.detailsFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasDetailsFetchingError = true
+            $0.detailsFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchVideos) {
@@ -118,12 +119,13 @@ final class SeriesDetailsTests: XCTestCase {
     
     @MainActor
     func testVideosFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
             SeriesDetailsFeature()
         } withDependencies: {
             $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
@@ -147,7 +149,7 @@ final class SeriesDetailsTests: XCTestCase {
         
         await store.receive(\.videosFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasVideosFetchingError = true
+            $0.videosFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchCast) {
@@ -172,13 +174,14 @@ final class SeriesDetailsTests: XCTestCase {
     
     @MainActor
     func testCastFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
             SeriesDetailsFeature()
         } withDependencies: {
             $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
@@ -210,7 +213,7 @@ final class SeriesDetailsTests: XCTestCase {
         
         await store.receive(\.castFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasCastFetchingError = true
+            $0.castFetchingError = SomethingWrong().localizedDescription
         }
         
         await store.receive(\.fetchReviews) {
@@ -226,6 +229,8 @@ final class SeriesDetailsTests: XCTestCase {
     
     @MainActor
     func testReviewsFetchFailure() async {
+        struct SomethingWrong: Error {}
+        
         let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
             SeriesDetailsFeature()
         } withDependencies: {
@@ -233,7 +238,6 @@ final class SeriesDetailsTests: XCTestCase {
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
         }
@@ -273,7 +277,7 @@ final class SeriesDetailsTests: XCTestCase {
         
         await store.receive(\.reviewsFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasReviewsFetchingError = true
+            $0.reviewsFetchingError = SomethingWrong().localizedDescription
         }
     }
 }

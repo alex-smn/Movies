@@ -23,13 +23,18 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 20) {
                     TextField("Search", text: $store.searchQuery.sending(\.searchQueryChanged))
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.none)
                         .autocorrectionDisabled()
                     
                     if store.searchQuery.isEmpty {
+                        Text("Trending")
+                            .font(.title)
+
+                        periodPickerView
+
                         trendingView
                     } else {
                         searchView
@@ -168,11 +173,6 @@ struct HomeView: View {
             }
             
             if !store.trending.isEmpty {
-                Text("Trending")
-                    .font(.title)
-                
-                periodPickerView
-                
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: trendingRows) {
                         ForEach(Array(store.trending.enumerated()), id: \.1.id) { index, program in

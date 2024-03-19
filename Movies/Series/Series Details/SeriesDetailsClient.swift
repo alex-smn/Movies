@@ -111,7 +111,7 @@ struct Season: Codable, Equatable {
     let name: String?
     let overview: String
     let posterPath: String?
-    let seasonNumber: Int?
+    let seasonNumber: Int
     let voteAverage: Float
 }
 

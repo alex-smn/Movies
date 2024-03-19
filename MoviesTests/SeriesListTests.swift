@@ -66,11 +66,12 @@ final class SeriesListFeatureTests: XCTestCase {
     
     @MainActor
     func testFetchFailure() async {
+        struct SomethingWrong: Error {}
+
         let store = TestStore(initialState: SeriesListFeature.State()) {
             SeriesListFeature()
         } withDependencies: {
             $0.seriesListClient.fetch = { @Sendable _, _ in
-                struct SomethingWrong: Error {}
                 throw SomethingWrong()
             }
         }
@@ -83,7 +84,7 @@ final class SeriesListFeatureTests: XCTestCase {
         
         await store.receive(\.seriesFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
-            $0.hasFetchingError = true
+            $0.fetchingError = SomethingWrong().localizedDescription
         }
     }
 }

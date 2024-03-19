@@ -186,7 +186,7 @@ struct HomeFeature {
                         )
                     }
                 }
-                .cancellable(id: CancelID.search, cancelInFlight: true)
+                .cancellable(id: CancelID.search , cancelInFlight: true)
                 
             case let .searchMoviesResponse(.success(result)):
                 state.isLoading = false
@@ -198,9 +198,8 @@ struct HomeFeature {
                 
                 return .none
                 
-            case let .searchMoviesResponse(.failure(error)):
+            case .searchMoviesResponse(.failure):
                 state.isLoading = false
-                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []
@@ -217,9 +216,8 @@ struct HomeFeature {
                 
                 return .none
                 
-            case let .searchSeriesResponse(.failure(error)):
+            case .searchSeriesResponse(.failure):
                 state.isLoading = false
-                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []
@@ -236,9 +234,8 @@ struct HomeFeature {
                 
                 return .none
                 
-            case let .searchPersonsResponse(.failure(error)):
+            case .searchPersonsResponse(.failure):
                 state.isLoading = false
-                state.searchError = error.localizedDescription
                 state.searchMoviesResults = []
                 state.searchSeriesResults = []
                 state.searchPersonsResults = []

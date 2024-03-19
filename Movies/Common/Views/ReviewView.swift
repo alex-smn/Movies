@@ -11,6 +11,8 @@ import SwiftUI
 struct ReviewView: View {
     let review: Review
     
+    @State private var showingFull = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack(spacing: 20) {
@@ -43,11 +45,12 @@ struct ReviewView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 15)
-                                    .padding(.leading, 5)
+                                    .padding(.leading, 8)
                                 Text(String(format: "%.1f", rating))
-                                    .padding(.trailing, 5)
+                                    .padding(.trailing, 8)
                             }
                             .background(.blue)
+                            .foregroundColor(.white)
                             .cornerRadius(5)
                         }
                         
@@ -57,10 +60,21 @@ struct ReviewView: View {
                 }
             }
             
-            Text(review.content)
-                .multilineTextAlignment(.leading)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(review.content)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(showingFull || review.content.count < 300 ? nil : 8)
+                if review.content.count > 300 {
+                    Button {
+                        showingFull.toggle()
+                    } label: {
+                        Text(showingFull ? "show less" : "show more")
+                    }
+                }
+            }
         }
         .padding()
+        .frame(maxWidth: .infinity)
         .overlay {
             RoundedRectangle(cornerRadius: 5)
                 .stroke(.gray, lineWidth: 1)
