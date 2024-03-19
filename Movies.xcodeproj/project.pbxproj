@@ -25,6 +25,8 @@
 		FA74DE452BA359DA00E4CE30 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FA74DE442BA359DA00E4CE30 /* Kingfisher */; };
 		FA74DE472BA35C1400E4CE30 /* MoviesListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA74DE462BA35C1400E4CE30 /* MoviesListItemView.swift */; };
 		FA74DE492BA35F5D00E4CE30 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA74DE482BA35F5D00E4CE30 /* Constants.swift */; };
+		FACCC04B2BA9E094003863EB /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACCC04A2BA9E094003863EB /* KeychainHelper.swift */; };
+		FACCC04F2BA9F1B1003863EB /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACCC04E2BA9F1B1003863EB /* AuthorizationManager.swift */; };
 		FAEB104B2BA4C44B006E04C4 /* Array+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104A2BA4C44B006E04C4 /* Array+Extenstions.swift */; };
 		FAEB104E2BA4C58C006E04C4 /* MovieDetailsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104D2BA4C58C006E04C4 /* MovieDetailsFeature.swift */; };
 		FAEB10502BA4C5F3006E04C4 /* MovieDetailsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB104F2BA4C5F3006E04C4 /* MovieDetailsClient.swift */; };
@@ -79,6 +81,9 @@
 		FA74DE412BA353CA00E4CE30 /* MoviesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListView.swift; sourceTree = "<group>"; };
 		FA74DE462BA35C1400E4CE30 /* MoviesListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListItemView.swift; sourceTree = "<group>"; };
 		FA74DE482BA35F5D00E4CE30 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FACCC04A2BA9E094003863EB /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		FACCC04E2BA9F1B1003863EB /* AuthorizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationManager.swift; sourceTree = "<group>"; };
+		FACCC0502BAA3367003863EB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		FAEB10412BA4826A006E04C4 /* MoviesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoviesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAEB10432BA4826A006E04C4 /* MoviesListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListTests.swift; sourceTree = "<group>"; };
 		FAEB104A2BA4C44B006E04C4 /* Array+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extenstions.swift"; sourceTree = "<group>"; };
@@ -187,6 +192,7 @@
 				FA74DE1C2BA33C1700E4CE30 /* Assets.xcassets */,
 				FA74DE1E2BA33C1700E4CE30 /* Preview Content */,
 				FAEB10622BA6F9E1006E04C4 /* Common */,
+				FACCC0502BAA3367003863EB /* README.md */,
 			);
 			path = Movies;
 			sourceTree = "<group>";
@@ -238,9 +244,11 @@
 			children = (
 				FAEB10632BA6F9F3006E04C4 /* Views */,
 				FA74DE3F2BA3521F00E4CE30 /* NetworkHelper.swift */,
+				FACCC04A2BA9E094003863EB /* KeychainHelper.swift */,
 				FAEB108B2BA75023006E04C4 /* LoginSession.swift */,
 				FA74DE482BA35F5D00E4CE30 /* Constants.swift */,
 				FAEB104A2BA4C44B006E04C4 /* Array+Extenstions.swift */,
+				FACCC04E2BA9F1B1003863EB /* AuthorizationManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -398,6 +406,7 @@
 			files = (
 				FAEB107C2BA70056006E04C4 /* SeriesListFeature.swift in Sources */,
 				FAEB10882BA727DC006E04C4 /* FavoritesListFeature.swift in Sources */,
+				FACCC04F2BA9F1B1003863EB /* AuthorizationManager.swift in Sources */,
 				FA74DE472BA35C1400E4CE30 /* MoviesListItemView.swift in Sources */,
 				FAEB104B2BA4C44B006E04C4 /* Array+Extenstions.swift in Sources */,
 				FAEB107E2BA70056006E04C4 /* SeriesListView.swift in Sources */,
@@ -412,6 +421,7 @@
 				FA52C2312BA888B2001E5B97 /* HomeFeature.swift in Sources */,
 				FA52C2332BA88C03001E5B97 /* HomeClient.swift in Sources */,
 				FAEB107D2BA70056006E04C4 /* SeriesListClient.swift in Sources */,
+				FACCC04B2BA9E094003863EB /* KeychainHelper.swift in Sources */,
 				FAEB104E2BA4C58C006E04C4 /* MovieDetailsFeature.swift in Sources */,
 				FA52C2352BA894EE001E5B97 /* HomeView.swift in Sources */,
 				FAEB108C2BA75023006E04C4 /* LoginSession.swift in Sources */,
@@ -648,6 +658,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 64KZQ8QMLU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Home.MoviesTests;
@@ -665,6 +676,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 64KZQ8QMLU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Home.MoviesTests;

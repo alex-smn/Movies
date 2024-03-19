@@ -35,14 +35,12 @@ struct FavoritesListFeature {
     
     enum Action {
         case path(StackAction<Path.State, Path.Action>)
-        case requestToken
-        case tokenGenerated(Result<RequestToken, Error>)
-        case authenticate
-        case authenticated(Result<Bool, Error>)
-        case createSessionId
-        case sessionIdCreated(Result<Session, Error>)
-        case getAccountDetails
-        case accountDetailsFetched(Result<Account, Error>)
+        case authorize
+        case authorized(Result<(sessionId: String, accountId: Int), Error>)
+        case getSessionInfo
+        case sessionInfoAcquired((sessionId: String, accountId: Int)?)
+        case logOut
+        case loggedOut
         case fetchFavorites
         case moviesFetched(Result<MoviesList, Error>)
         case seriesFetched(Result<SeriesList, Error>)
@@ -72,6 +70,8 @@ struct FavoritesListFeature {
             switch action {
             case .favoritesPageOpened:
                 state.page = 1
+                state.movies = []
+                state.series = []
                 state.isLoading = false
                 state.fetchingError = nil
                 
@@ -81,7 +81,7 @@ struct FavoritesListFeature {
                     }
                 } else {
                     return .run { send in
-                        await send(.requestToken)
+                        await send(.getSessionInfo)
                     }
                 }
                 
@@ -94,6 +94,7 @@ struct FavoritesListFeature {
                 
             case let .filterSet(filter):
                 state.page = 1
+                state.hasAuthenticationError = false
                 state.movies = []
                 state.series = []
                 state.filter = filter
@@ -102,128 +103,75 @@ struct FavoritesListFeature {
                     await send(.fetchFavorites)
                 }
                 
-            case .requestToken:
+            case .authorize:
                 state.isLoading = true
                 
                 return .run { send in
                     await send(
-                        .tokenGenerated(
+                        .authorized(
                             Result {
-                                try await self.favoritesListClient.requestToken()
+                                try await self.favoritesListClient.authorize()
                             }
                         )
                     )
                 }
                 
-            case let .tokenGenerated(.success(result)):
+            case let .authorized(.success(info)):
                 state.isLoading = false
                 state.hasAuthenticationError = false
-                state.token = result.requestToken
-                
-                return .run { send in
-                    await send(.authenticate)
-                }
-                
-            case .tokenGenerated(.failure):
-                state.isLoading = false
-                state.hasAuthenticationError = true
-                
-                return .none
-                
-            case .authenticate:
-                state.isLoading = true
-                
-                if let token = state.token {
-                    return .run { [token = token] send in
-                        await send(
-                            .authenticated(
-                                Result {
-                                    try await self.favoritesListClient.authenticate(token: token)
-                                }
-                            )
-                        )
-                    }
-                } else {
-                    return .none
-                }
-                
-            case let .authenticated(.success(result)):
-                state.isLoading = false
-                
-                if result == true {
-                    return .run { send in
-                        await send(.createSessionId)
-                    }
-                } else {
-                    state.hasAuthenticationError = true
-                    return .none
-                }
-                
-            case .authenticated(.failure):
-                state.isLoading = false
-                state.hasAuthenticationError = true
-                
-                return .none
-                
-            case .createSessionId:
-                state.isLoading = true
-                
-                if let token = state.token {
-                    return .run { [token = token] send in
-                        await send(
-                            .sessionIdCreated(
-                                Result {
-                                    try await self.favoritesListClient.createSessionId(token: token)
-                                }
-                            )
-                        )
-                    }
-                } else {
-                    return .none
-                }
-                
-            case let .sessionIdCreated(.success(result)):
-                state.isLoading = false
-                state.sessionId = result.sessionId
-                
-                return .run { send in
-                    await send(.getAccountDetails)
-                }
-                
-            case .sessionIdCreated(.failure):
-                state.isLoading = false
-                state.hasAuthenticationError = true
-                
-                return .none
-                
-            case .getAccountDetails:
-                state.isLoading = true
-                
-                if let sessionId = state.sessionId {
-                    return .run { [sessionId = sessionId] send in
-                        await send(
-                            .accountDetailsFetched(
-                                Result {
-                                    try await self.favoritesListClient.getAccountDetails(sessionId: sessionId)
-                                }
-                            )
-                        )
-                    }
-                } else {
-                    return .none
-                }
-                
-            case let .accountDetailsFetched(.success(result)):
-                state.isLoading = false
-                state.accountId = result.id
-                
+                state.sessionId = info.sessionId
+                state.accountId = info.accountId
+                    
                 return .run { send in
                     await send(.fetchFavorites)
                 }
                 
-            case .accountDetailsFetched(.failure):
+            case .authorized(.failure):
                 state.isLoading = false
                 state.hasAuthenticationError = true
+                
+                return .none
+                
+            case .getSessionInfo:
+                state.isLoading = true
+                state.hasAuthenticationError = false
+                
+                return .run { send in
+                    await send(
+                        .sessionInfoAcquired(
+                            self.favoritesListClient.getSessionInfo()
+                        )
+                    )
+                }
+                
+            case let .sessionInfoAcquired(info):
+                state.isLoading = false
+                if let info {
+                    state.sessionId = info.sessionId
+                    state.accountId = info.accountId
+                    return .run { send in
+                        await send(.fetchFavorites)
+                    }
+                }
+                    
+                return .none
+                
+            case .logOut:
+                state.isLoading = true
+                self.favoritesListClient.logOut()
+                
+                return .run { send in
+                    await send(.loggedOut)
+                }
+                
+            case .loggedOut:
+                state.isLoading = false
+                state.sessionId = nil
+                state.accountId = nil
+                state.movies = []
+                state.series = []
+                state.page = 1
+                state.totalPages = 1
                 
                 return .none
                 
@@ -293,26 +241,3 @@ struct FavoritesListFeature {
         .forEach(\.path, action: \.path)
     }
 }
-//
-//@Reducer
-//enum Shared {
-//    @ObservableState
-//    struct State: Equatable {
-//        var accountId: Int?
-//    }
-//    
-//    enum Action {
-//        case setAccountId(Int)
-//    }
-//    
-//    var body: some ReducerOf<Self> {
-//        Reduce { state, action in
-//            switch action {
-//            case let .setAccountId(id):
-//                state.accountId = id
-//                
-//                return .none
-//            }
-//        }
-//    }
-//}

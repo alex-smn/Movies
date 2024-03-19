@@ -20,7 +20,7 @@ class NetworkHelper {
                                             timeoutInterval: 10.0)
         request.httpMethod = requestType
         request.allHTTPHeaderFields = headers
-        request.cachePolicy = .useProtocolCachePolicy
+        request.cachePolicy = .reloadRevalidatingCacheData
         request.timeoutInterval = 5.0
         
         if let parameters {

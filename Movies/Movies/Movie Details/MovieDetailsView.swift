@@ -46,19 +46,32 @@ struct MovieDetailsView: View {
                     .frame(height: 220)
                     
                     VStack(spacing: 20) {
-                        Text(movie.title)
-                            .font(.title)
+                        HStack {
+                            Text(movie.title)
+                                .font(.title)
+                            
+                            Spacer()
+                            
+                            Button {
+                                store.send(.toggleFavorite)
+                            } label: {
+                                Image(systemName: store.isInFavorite ? "heart.fill" : "heart")
+                            }
+                        }
                         
                         
                         HStack {
                             RatingView(rating: movie.voteAverage)
+                            
                             Spacer()
+                            
                             ForEach(movie.genres.prefix(3), id: \.id) { genre in
                                 Text(genre.name)
                             }
                         }
                         
                         Text(movie.tagline)
+                            .multilineTextAlignment(.center)
                             .italic()
                         
                         HStack {
@@ -143,7 +156,6 @@ struct MovieDetailsView: View {
                 }
             }
         }
-        .multilineTextAlignment(.center)
         .onAppear {
             store.send(.movieDetailsPageOpened)
         }

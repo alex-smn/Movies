@@ -20,9 +20,32 @@ final class SeriesDetailsTests: XCTestCase {
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
         }
         
         await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+            $0.accountId = 1
+            $0.sessionId = "123"
+        }
+        
+        await store.receive(\.fetchAccountState) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.accountStateFetched.success, timeout: 1) {
+            $0.isLoading = false
+            $0.isInFavorite = true
+        }
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -75,9 +98,32 @@ final class SeriesDetailsTests: XCTestCase {
             $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
         }
         
         await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+            $0.accountId = 1
+            $0.sessionId = "123"
+        }
+        
+        await store.receive(\.fetchAccountState) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.accountStateFetched.success, timeout: 1) {
+            $0.isLoading = false
+            $0.isInFavorite = true
+        }
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -130,9 +176,32 @@ final class SeriesDetailsTests: XCTestCase {
             }
             $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
         }
         
         await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+            $0.accountId = 1
+            $0.sessionId = "123"
+        }
+        
+        await store.receive(\.fetchAccountState) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.accountStateFetched.success, timeout: 1) {
+            $0.isLoading = false
+            $0.isInFavorite = true
+        }
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -185,9 +254,32 @@ final class SeriesDetailsTests: XCTestCase {
                 throw SomethingWrong()
             }
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
         }
         
         await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+            $0.accountId = 1
+            $0.sessionId = "123"
+        }
+        
+        await store.receive(\.fetchAccountState) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.accountStateFetched.success, timeout: 1) {
+            $0.isLoading = false
+            $0.isInFavorite = true
+        }
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -240,9 +332,32 @@ final class SeriesDetailsTests: XCTestCase {
             $0.seriesDetailsClient.fetchReviews = { @Sendable _ in
                 throw SomethingWrong()
             }
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
         }
         
         await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+            $0.accountId = 1
+            $0.sessionId = "123"
+        }
+        
+        await store.receive(\.fetchAccountState) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.accountStateFetched.success, timeout: 1) {
+            $0.isLoading = false
+            $0.isInFavorite = true
+        }
         
         await store.receive(\.fetchDetails) {
             $0.isLoading = true
@@ -278,6 +393,69 @@ final class SeriesDetailsTests: XCTestCase {
         await store.receive(\.reviewsFetched.failure, timeout: .seconds(1)) {
             $0.isLoading = false
             $0.reviewsFetchingError = SomethingWrong().localizedDescription
+        }
+    }
+    
+    @MainActor
+    func testSeriesDetailsAuthFailure() async {
+        let store = TestStore(initialState: SeriesDetailsFeature.State(seriesId: 2)) {
+            SeriesDetailsFeature()
+        } withDependencies: {
+            $0.seriesDetailsClient.fetchDetails = { @Sendable _ in .mock(id: 2) }
+            $0.seriesDetailsClient.fetchVideos = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchCast = { @Sendable _ in .mock() }
+            $0.seriesDetailsClient.fetchReviews = { @Sendable _ in .mock()}
+            $0.seriesDetailsClient.authorize = { @Sendable in ("123", 1) }
+            $0.seriesDetailsClient.getSessionInfo = { @Sendable in nil }
+            $0.seriesDetailsClient.getAccountState = { @Sendable _, _, _ in AccountState.mock() }
+            $0.seriesDetailsClient.toggleFavorites = { @Sendable _, _, _, _ in ToggleFavoritesResponse.mock() }
+        }
+        
+        await store.send(.seriesDetailsPageOpened)
+        
+        await store.receive(\.getSessionInfo) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.sessionInfoAcquired, timeout: 1) {
+            $0.isLoading = false
+        }
+        
+        await store.receive(\.fetchDetails) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.detailsFetched.success, timeout: .seconds(1)) {
+            $0.isLoading = false
+            $0.series = SeriesDetails.mock(id: 2)
+        }
+        
+        await store.receive(\.fetchVideos) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.videosFetched.success, timeout: .seconds(1)) {
+            $0.isLoading = false
+            $0.videos = [Video.mock()]
+        }
+        
+        await store.receive(\.fetchCast) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.castFetched.success, timeout: .seconds(1)) {
+            $0.isLoading = false
+            $0.castPreview = [Cast.mock(), Cast.mock()]
+        }
+        
+        await store.receive(\.fetchReviews) {
+            $0.isLoading = true
+        }
+        
+        await store.receive(\.reviewsFetched.success, timeout: .seconds(1)) {
+            $0.isLoading = false
+            $0.reviewsPreview = [Review.mock(), Review.mock()]
+            $0.totalReviews = 13
         }
     }
 }

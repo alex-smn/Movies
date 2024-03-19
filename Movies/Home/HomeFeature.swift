@@ -135,6 +135,7 @@ struct HomeFeature {
                 
             case let .periodChanged(period):
                 state.period = period
+                state.trendingPage = 1
                 state.trending = []
                 
                 return .run { send in

@@ -36,13 +36,14 @@ struct SeriesListItemView: View {
                     .foregroundColor(.black)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 10)
+                    .multilineTextAlignment(.leading)
                 
                 if let firstAirDate = series.firstAirDate {
                     Text(firstAirDate, style: .date)
                         .fontWeight(.light)
                         .foregroundColor(.black)
                         .padding(.horizontal, 10)
-                    
+                        .multilineTextAlignment(.leading)
                 }
                 Spacer()
             }

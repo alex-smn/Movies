@@ -94,6 +94,7 @@ struct SeriesListFeature {
                 
             case .seriesPageOpened:
                 state.page = 1
+                state.series = []
                 state.isLoading = false
                 state.fetchingError = nil
                 

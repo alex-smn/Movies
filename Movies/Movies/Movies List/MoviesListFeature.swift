@@ -94,6 +94,7 @@ struct MoviesListFeature {
                 
             case .moviesPageOpened:
                 state.page = 1
+                state.movies = []
                 state.isLoading = false
                 state.fetchingError = nil
                 

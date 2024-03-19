@@ -12,6 +12,8 @@ import Foundation
 struct MovieDetailsFeature {
     @ObservableState
     struct State: Equatable {
+        var accountId: Int?
+        var sessionId: String?
         var movieId: Int = 0
         var movie: MovieDetails?
         var videos: [Video]?
@@ -23,10 +25,16 @@ struct MovieDetailsFeature {
         var videosFetchingError: String?
         var castFetchingError: String?
         var reviewsFetchingError: String?
+        var hasAuthenticationError = false
+        var isInFavorite = false
     }
     
     enum Action {
         case movieDetailsPageOpened
+        case authorize
+        case getSessionInfo
+        case authorized(Result<(sessionId: String, accountId: Int), Error>)
+        case sessionInfoAcquired((sessionId: String, accountId: Int)?)
         case fetchDetails
         case detailsFetched(Result<MovieDetails, Error>)
         case fetchVideos
@@ -35,6 +43,10 @@ struct MovieDetailsFeature {
         case castFetched(Result<MovieCast, Error>)
         case fetchReviews
         case reviewsFetched(Result<MovieReviews, Error>)
+        case fetchAccountState
+        case accountStateFetched(Result<AccountState, Error>)
+        case toggleFavorite
+        case favoriteToggled(Result<ToggleFavoritesResponse, Error>)
     }
     
     @Dependency(\.movieDetailsClient) var movieDetailsClient
@@ -50,7 +62,7 @@ struct MovieDetailsFeature {
                 state.reviewsFetchingError = nil
                 
                 return .run { send in
-                    await send(.fetchDetails)
+                    await send(.getSessionInfo)
                 }
                 
             case .fetchDetails:
@@ -171,6 +183,123 @@ struct MovieDetailsFeature {
             case let .reviewsFetched(.failure(error)):
                 state.isLoading = false
                 state.reviewsFetchingError = error.localizedDescription
+                
+                return .none
+                
+            case .authorize:
+                state.isLoading = true
+                state.hasAuthenticationError = false
+                
+                return .run { send in
+                    await send(
+                        .authorized(
+                            Result {
+                                try await self.movieDetailsClient.authorize()
+                            }
+                        )
+                    )
+                }
+                
+            case let .authorized(.success(info)):
+                state.isLoading = false
+                state.sessionId = info.sessionId
+                state.accountId = info.accountId
+                    
+                return .run { send in
+                    await send(.fetchAccountState)
+                }
+                
+            case .authorized(.failure):
+                state.isLoading = false
+                state.hasAuthenticationError = true
+                
+                return .none
+                
+            case .getSessionInfo:
+                state.isLoading = true
+                state.hasAuthenticationError = false
+                
+                return .run { send in
+                    await send(
+                        .sessionInfoAcquired(
+                            self.movieDetailsClient.getSessionInfo()
+                        )
+                    )
+                }
+                
+            case let .sessionInfoAcquired(info):
+                state.isLoading = false
+                if let info {
+                    state.sessionId = info.sessionId
+                    state.accountId = info.accountId
+                    return .run { send in
+                        await send(.fetchAccountState)
+                    }
+                }
+                    
+                return .run { send in
+                    await send(.fetchDetails)
+                }
+                
+            case .fetchAccountState:
+                state.isLoading = true
+                
+                if let sessionId = state.sessionId, let accountId = state.accountId {
+                    return .run { [id = state.movieId, sessionId = sessionId, accountId = accountId ] send in
+                        await send(
+                            .accountStateFetched(
+                                Result {
+                                    try await self.movieDetailsClient.getAccountState(id: id, accountId: accountId, sessionId: sessionId)
+                                }
+                            )
+                        )
+                    }
+                } else {
+                    return .none
+                }
+                
+            case let .accountStateFetched(.success(accountState)):
+                state.isLoading = false
+                state.isInFavorite = accountState.favorite
+                
+                return .run { send in
+                    await send(.fetchDetails)
+                }
+                
+            case .accountStateFetched(.failure):
+                state.isLoading = false
+                
+                return .run { send in
+                    await send(.fetchDetails)
+                }
+                
+            case .toggleFavorite:
+                state.isLoading = true
+                
+                if let sessionId = state.sessionId, let accountId = state.accountId {
+                    return .run { [id = state.movieId, sessionId = sessionId, accountId = accountId, isInFavorite = state.isInFavorite] send in
+                        await send(
+                            .favoriteToggled(
+                                Result {
+                                    try await self.movieDetailsClient.toggleFavorites(id: id, accountId: accountId, sessionId: sessionId, isInFavorites: isInFavorite)
+                                }
+                            )
+                        )
+                    }
+                } else {
+                    return .run { send in
+                        await send(.authorize)
+                    }
+                }
+                
+            case .favoriteToggled(.success):
+                state.isLoading = false
+                state.isInFavorite.toggle()
+                
+                return .none
+                
+            case .favoriteToggled(.failure):
+                state.isLoading = false
                 
                 return .none
             }

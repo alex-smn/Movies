@@ -16,6 +16,10 @@ struct SeriesDetailsClient {
     var fetchVideos: @Sendable (_ id: Int) async throws -> SeriesVideos
     var fetchCast: @Sendable (_ id: Int) async throws -> SeriesCast
     var fetchReviews: @Sendable (_ id: Int) async throws -> SeriesReviews
+    var authorize: @Sendable () async throws -> (String, Int)
+    var getSessionInfo: @Sendable ()  -> (String, Int)?
+    var getAccountState: @Sendable(_ id: Int, _ accountId: Int, _ sessionId: String) async throws -> AccountState
+    var toggleFavorites: @Sendable(_ id: Int, _ accountId: Int, _ sessionId: String, _ isInFavorites: Bool) async throws -> ToggleFavoritesResponse
 }
 
 extension SeriesDetailsClient: TestDependencyKey {
@@ -30,6 +34,18 @@ extension SeriesDetailsClient: TestDependencyKey {
             .mock()
         },
         fetchReviews: { _ in
+            .mock()
+        },
+        authorize: {
+            ("", 0)
+        },
+        getSessionInfo: {
+            ("", 0)
+        },
+        getAccountState: { _, _, _ in
+            .mock()
+        },
+        toggleFavorites: { _, _, _, _ in
             .mock()
         }
     )
@@ -50,6 +66,24 @@ extension SeriesDetailsClient: DependencyKey {
         },
         fetchReviews: { id in
             return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiTVUrlFormat)/\(id)/reviews")!, responseType: SeriesReviews.self)
+        },
+        authorize: {
+            return try await AuthorizationManager.authorize()
+        },
+        getSessionInfo: {
+            return AuthorizationManager.getSessionInfo()
+        },
+        getAccountState: { id, accountId, sessionId in
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiTVUrlFormat)/\(id)/account_states")!, responseType: AccountState.self)
+        },
+        toggleFavorites: { id, accountId, sessionId, isInFavorites in
+            let parameters = [
+                "media_type": "tv",
+                "media_id": id,
+                "favorite": !isInFavorites
+            ]
+            
+            return try await NetworkHelper.performNetworkRequest(url: URL(string: "\(Constants.apiAccountUrl)/\(accountId)/favorite")!, requestType: "POST", parameters: parameters, responseType: ToggleFavoritesResponse.self)
         }
     )
 }

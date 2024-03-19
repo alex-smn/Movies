@@ -13,11 +13,12 @@ struct HomeView: View {
     @Bindable var store: StoreOf<HomeFeature>
     @State private var selectedSearchFilter: HomeFeature.SearchFilter = .movies
     @State private var selectedPeriod: HomeFeature.Period = .day
+    @FocusState private var isTextFieldFocused: Bool
 
     @Environment(\.colorScheme) var colorScheme
 
     private let trendingRows = [
-        GridItem(.fixed(400), spacing: 15, alignment: .leading)
+        GridItem(.fixed(480), spacing: 15, alignment: .leading)
     ]
     
     var body: some View {
@@ -25,6 +26,8 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     TextField("Search", text: $store.searchQuery.sending(\.searchQueryChanged))
+                        .focused($isTextFieldFocused)
+                        .submitLabel(.done)
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.none)
                         .autocorrectionDisabled()
@@ -32,9 +35,9 @@ struct HomeView: View {
                     if store.searchQuery.isEmpty {
                         Text("Trending")
                             .font(.title)
-
+                        
                         periodPickerView
-
+                        
                         trendingView
                     } else {
                         searchView
@@ -181,7 +184,7 @@ struct HomeView: View {
                                     state: HomeFeature.Path.State.movie(MovieDetailsFeature.State(movieId: movie.id))
                                 ) {
                                     MoviesListItemView(movie: movie)
-                                        .frame(width: 180)
+                                        .frame(width: 220)
                                         .onAppear {
                                             if store.trending.count - 2 == index {
                                                 store.send(.listEndReached)
@@ -193,7 +196,7 @@ struct HomeView: View {
                                     state: HomeFeature.Path.State.series(SeriesDetailsFeature.State(seriesId: series.id))
                                 ) {
                                     SeriesListItemView(series: series)
-                                        .frame(width: 180)
+                                        .frame(width: 220)
                                         .onAppear {
                                             if store.trending.count - 2 == index {
                                                 store.send(.listEndReached)

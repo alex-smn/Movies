@@ -46,19 +46,33 @@ struct SeriesDetailsView: View {
                     .frame(height: 220)
                     
                     VStack(spacing: 20) {
-                        Text(series.name)
-                            .font(.title)
+                        HStack {
+                            Text(series.name)
+                                .font(.title)
+                            
+                            Spacer()
+                            
+                            Button {
+                                store.send(.toggleFavorite)
+                            } label: {
+                                Image(systemName: store.isInFavorite ? "heart.fill" : "heart")
+                            }
+                        }
                         
                         
                         HStack {
                             RatingView(rating: series.voteAverage)
+                            
                             Spacer()
+                            
                             ForEach(series.genres.prefix(3), id: \.id) { genre in
                                 Text(genre.name)
                             }
                         }
                         
                         Text(series.tagline)
+                            .multilineTextAlignment(.center)
+
                             .italic()
                         
                         HStack {
@@ -190,7 +204,6 @@ struct SeriesDetailsView: View {
                 }
             }
         }
-        .multilineTextAlignment(.center)
         .onAppear {
             store.send(.seriesDetailsPageOpened)
         }

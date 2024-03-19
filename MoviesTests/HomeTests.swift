@@ -58,6 +58,7 @@ final class HomeFeatureTests: XCTestCase {
         
         await store.send(.periodChanged(.week)) {
             $0.period = .week
+            $0.trendingPage = 1
             $0.trending = []
         }
         
