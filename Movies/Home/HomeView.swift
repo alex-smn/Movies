@@ -13,7 +13,6 @@ struct HomeView: View {
     @Bindable var store: StoreOf<HomeFeature>
     @State private var selectedSearchFilter: HomeFeature.SearchFilter = .movies
     @State private var selectedPeriod: HomeFeature.Period = .day
-    @FocusState private var isTextFieldFocused: Bool
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -26,7 +25,6 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     TextField("Search", text: $store.searchQuery.sending(\.searchQueryChanged))
-                        .focused($isTextFieldFocused)
                         .submitLabel(.done)
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.none)
